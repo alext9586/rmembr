@@ -7,57 +7,57 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-const styles = {
-    card: {
-        minWidth: 275,
-        maxWidth: 400
-    },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
-    },
-    title: {
-        marginBottom: 16,
-        fontSize: 14,
-    },
-    pos: {
-        marginBottom: 12,
-    },
-};
-
-function SimpleCard(props) {
-    const { classes } = props;
-    const bull = <span className={classes.bullet}>•</span>;
-
-    var propTypes = {
-        classes: PropTypes.object.isRequired
-    };
-
-    return (
-        <div>
-            <Card className={classes.card}>
-                <CardContent>
-                    <Typography className={classes.title} color="textSecondary">
-                        Word of the Day
-                    </Typography>
-                    <Typography variant="headline" component="h2">
-                        be{bull}nev{bull}o{bull}lent
-                    </Typography>
-                    <Typography className={classes.pos} color="textSecondary">
-                        adjective
-                    </Typography>
-                    <Typography component="p">
-                        well meaning and kindly.<br />
-                        {'"a benevolent smile"'}
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button size="small">Learn More</Button>
-                </CardActions>
-            </Card>
-        </div>
-    );
+interface ISimpleCardProps {
+    title: string;
 }
 
-export default withStyles(styles)(SimpleCard);
+export default class SimpleCard extends React.Component<ISimpleCardProps, {}> {
+    constructor(props: ISimpleCardProps) {
+        super(props);
+    }
+
+    private styles = {
+        card: {
+            minWidth: 275,
+            maxWidth: 400
+        },
+        bullet: {
+            display: 'inline-block',
+            margin: '0 2px',
+            transform: 'scale(0.8)',
+        },
+        title: {
+            marginBottom: 16,
+            fontSize: 14,
+        },
+        pos: {
+            marginBottom: 12,
+        },
+    };
+
+    private MuiCard(props): JSX.Element {
+        return (
+            <div>
+                <Card className={props.classes.card}>
+                    <CardContent>
+                        <Typography variant="headline" component="h1">
+                            { props.title }
+                        </Typography>
+                        <Typography component="p">
+                            { props.children }
+                        </Typography>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
+
+    render(): JSX.Element {
+        const MuiCard = withStyles(this.styles)(this.MuiCard);
+        return (
+            <MuiCard title={this.props.title}>
+                { this.props.children }
+            </MuiCard>
+        );
+    }
+}
