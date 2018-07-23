@@ -4,6 +4,8 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
+import { MuiCardStyle } from '../../Styles/MuiCardStyle';
+
 interface ISimpleCardProps {
     title?: string;
     headline?: string;
@@ -13,20 +15,6 @@ export default class SimpleCard extends React.Component<ISimpleCardProps, {}> {
     constructor(props: ISimpleCardProps) {
         super(props);
     }
-
-    private styles = {
-        card: {
-            minWidth: 275,
-            maxWidth: 400,
-        },
-        title: {
-            marginBottom: 16,
-            fontSize: 14,
-        },
-        pos: {
-            marginBottom: 12,
-        },
-    };
 
     private MuiCard(props): JSX.Element {
         const { classes } = props;
@@ -57,7 +45,7 @@ export default class SimpleCard extends React.Component<ISimpleCardProps, {}> {
     }
 
     render(): JSX.Element {
-        const MuiCard = withStyles(this.styles)(this.MuiCard);
+        const MuiCard = withStyles(MuiCardStyle.styles)(this.MuiCard);
         return (
             <MuiCard title={this.props.title} headline={this.props.headline}>
                 { this.props.children }
