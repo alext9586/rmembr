@@ -3,6 +3,7 @@ import { Node } from "../Models/Node";
 import { IDbService, DbService } from "./DbService";
 
 export interface INodeService {
+    initWait(): Promise<void>;
     addNode(title: string, notes: string): void;
     getNode(id: string): Node;
     updateNode(node: Node): void;
@@ -12,11 +13,16 @@ export interface INodeService {
 export class NodeService implements INodeService {
     private nodes: Node[] = [];
     private dbService: IDbService = new DbService();
+    private initPromise: Promise<void>;
 
     constructor() {
-        this.dbService.getNodes().then(result => {
+        this.initPromise = this.dbService.getNodes().then(result => {
             this.nodes = result;
         });
+    }
+
+    initWait(): Promise<void> {
+        return this.initPromise;
     }
 
     addNode(title: string, notes: string): void {

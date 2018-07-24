@@ -1,22 +1,32 @@
 import * as React from 'react';
+import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import SimpleCard from '../SimpleCard/SimpleCard';
 import AddNodeForm from './AddNodeForm';
 import { Button } from '@material-ui/core';
 
 import "./AddNode.css";
-import { INodeService, NodeService } from '../../Services/NodeService';
+import Dependencies from '../../Services/Dependencies';
+
+const styles = ({ spacing }: Theme) => createStyles({
+    button: {
+        margin: spacing.unit,
+    },
+    input: {
+        display: 'none',
+    },
+});
 
 interface IAddNodeContainerState {
     title: string;
     notes: string;
 }
 
-interface IAddNodeContainerProps {
+interface IAddNodeContainerProps extends WithStyles<typeof styles> {
 
 }
 
-export default class AddNodeContainer extends React.Component<IAddNodeContainerProps, IAddNodeContainerState> {
-    private nodeService: INodeService = new NodeService();
+class AddNodeContainer extends React.Component<IAddNodeContainerProps, IAddNodeContainerState> {
+    private nodeService = Dependencies.nodeService;
 
     constructor(props: IAddNodeContainerProps) {
         super(props);
@@ -54,16 +64,20 @@ export default class AddNodeContainer extends React.Component<IAddNodeContainerP
     }
 
     private actions(): JSX.Element {
+        const { classes } = this.props;
+
         return (
             <div className="add-node-action-bar">
                 <Button
                     variant="contained"
                     size="small"
+                    className={classes.button}
                     onClick={this.handleSaveClick}>Cancel</Button>
                 <Button
                     variant="contained"
                     size="small"
                     color="primary"
+                    className={classes.button}
                     onClick={this.handleSaveClick}>Save</Button>
             </div>
         );
@@ -80,3 +94,5 @@ export default class AddNodeContainer extends React.Component<IAddNodeContainerP
         );
     }
 }
+
+export default withStyles(styles)(AddNodeContainer);
