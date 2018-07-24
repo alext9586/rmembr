@@ -1,6 +1,6 @@
 import * as React from 'react';
 import SimpleCard from './SimpleCard/SimpleCard';
-import AddNodeForm from './AddNodeForm/AddNodeForm';
+import AddNodeContainer from './AddNode/AddNodeContainer';
 //import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 import './App.css';
@@ -14,9 +14,7 @@ export default class App extends React.Component {
                         The quick brown fox jumps over the lazy dog.
                     </SimpleCard>
 
-                    <SimpleCard title="Add Node">
-                        <AddNodeForm />
-                    </SimpleCard>
+                    <AddNodeContainer />
 
                     {/* <Router>
                         <div>
