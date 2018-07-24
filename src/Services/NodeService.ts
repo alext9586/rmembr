@@ -17,9 +17,19 @@ export class NodeService implements INodeService {
     }
 
     getNode(id: string): Node {
-        var found = this.nodes.filter(x => x.id === id);
+        var found = this.nodes.filter(x => x._id === id);
 
         return found.length > 0 ? found[0] : new Node();
+    }
+
+    updateNode(node: Node): void {
+        this.nodes.some(n => {
+            if (n._id === node._id) {
+                n.update(node);
+                return true;
+            }
+            return false;
+        });
     }
 
     getNodes(): Node[] {

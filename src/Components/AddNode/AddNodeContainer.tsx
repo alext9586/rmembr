@@ -1,7 +1,7 @@
 import * as React from 'react';
 import SimpleCard from '../SimpleCard/SimpleCard';
 import AddNodeForm from './AddNodeForm';
-import { Button } from '../../../node_modules/@material-ui/core';
+import { Button } from '@material-ui/core';
 
 import "./AddNode.css";
 

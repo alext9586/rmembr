@@ -3,7 +3,7 @@ import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import { CardActions } from '../../../node_modules/@material-ui/core';
+import { CardActions } from '@material-ui/core';
 
 const styles = createStyles({
     card: {
