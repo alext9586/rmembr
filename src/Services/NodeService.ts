@@ -1,19 +1,28 @@
 import { v4 as uuid } from 'uuid';
 import { Node } from "../Models/Node";
+import { IDbService, DbService } from "./DbService";
 
 export interface INodeService {
-
+    addNode(title: string, notes: string): void;
+    getNode(id: string): Node;
+    updateNode(node: Node): void;
+    getNodes(): Node[];
 }
 
 export class NodeService implements INodeService {
     private nodes: Node[] = [];
+    private dbService: IDbService = new DbService();
 
     constructor() {
-
+        this.dbService.getNodes().then(result => {
+            this.nodes = result;
+        });
     }
 
     addNode(title: string, notes: string): void {
-        this.nodes.push(new Node(uuid(), title, notes));
+        var newNode = new Node(uuid(), title, notes);
+        this.nodes.push(newNode);
+        this.dbService.putNode(newNode);
     }
 
     getNode(id: string): Node {
@@ -26,6 +35,7 @@ export class NodeService implements INodeService {
         this.nodes.some(n => {
             if (n._id === node._id) {
                 n.update(node);
+                this.dbService.putNode(node);
                 return true;
             }
             return false;

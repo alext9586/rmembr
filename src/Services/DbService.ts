@@ -3,9 +3,10 @@ import { INode, Node } from "../Models/Node";
 
 // https://www.bennadel.com/blog/3194-experimenting-with-simple-crud-operations-using-pouchdb-in-angular-2-1-1.htm
 
-interface IPouchDbGetNodesResult extends PouchDB.Core.ExistingDocument<PouchDB.Core.AllDocsMeta> {
-    title?: string;
-    notes?: string;
+export interface IDbService {
+    putNode(node: Node): Promise<string>;
+    updateNodes(nodes: Node[]): Promise<Node[]>;
+    getNodes(): Promise<Node[]>;
 }
 
 export class DbService {
@@ -15,26 +16,38 @@ export class DbService {
         
     }
 
-    public addNode(node: Node): Promise<string> {
+    putNode(node: Node): Promise<string> {
         var promise = this.db
-            .put(node)
+            .put(node.toJson())
             .then(result => result.id);
         
         return (promise);
     }
 
-    public getNodes(): Promise<Node[]> {
+    updateNodes(nodes: Node[]): Promise<Node[]> {
+        var promise = this.db
+            .bulkDocs(nodes.map(n => n.toJson()))
+            .then(result => this.mapResultsToNode(result));
+        
+        return (promise);
+    }
+
+    getNodes(): Promise<Node[]> {
         var promise = this.db
             .allDocs({
                 include_docs: true
             })
-            .then(result => {
-                return result.rows.map(row => {
-                    var doc: IPouchDbGetNodesResult = row.doc;
-                    return new Node(doc._id, doc.title, doc.notes);
-                })
-            })
+            .then(result => this.mapResultsToNode(result))
         
         return (promise);
+    }
+
+    private mapResultsToNode(result: any): Node[] {
+        return result.rows.map(row => {
+            var doc: any = row.doc;
+            var newNode = new Node();
+            newNode.fromJson(doc);
+            return newNode;
+        });
     }
 }

@@ -3,6 +3,7 @@ import { IConnection, Connection } from "./Connection"
 
 export interface INode {
     _id: string;
+    _rev: string;
     title: string;
     notes: string;
     connections: IConnection[];
@@ -11,6 +12,7 @@ export interface INode {
 export class Node {
     private connections: Connection[] = [];
     private id: string;
+    private rev: string;
 
     get _id(): string {
         return this.id;
@@ -47,9 +49,22 @@ export class Node {
         this.connections = newNode.getAllConnections();
     }
 
+    fromJson(node: INode): void {
+        this.id = node._id;
+        this.rev = node._rev;
+        this.title = node.title;
+        this.notes = node.notes;
+        this.connections = node.connections.map(c => {
+            const temp = new Connection();
+            temp.fromJson(c);
+            return temp;
+        });
+    }
+
     toJson(): INode {
         return {
             _id: this.id,
+            _rev: this.rev,
             title: this.title,
             notes: this.notes,
             connections: this.connections.map(c => c.toJson())

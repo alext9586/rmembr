@@ -22,6 +22,8 @@ interface IAddNodeFormState {
 }
 
 interface IAddNodeFormProps extends WithStyles<typeof styles> {
+    onTitleBlur: (event: any) => void;
+    onNotesBlur: (event: any) => void;
 }
 
 class AddNodeForm extends React.Component<IAddNodeFormProps, IAddNodeFormState> {
@@ -52,7 +54,7 @@ class AddNodeForm extends React.Component<IAddNodeFormProps, IAddNodeFormState> 
     }
 
     render(): JSX.Element {
-        const { classes } = this.props;
+        const { classes, onTitleBlur, onNotesBlur } = this.props;
 
         return (
             <form className={classes.container} noValidate autoComplete="off">
@@ -62,6 +64,7 @@ class AddNodeForm extends React.Component<IAddNodeFormProps, IAddNodeFormState> 
                     className={classes.textField}
                     value={this.state.title}
                     onChange={this.handleTitleChange}
+                    onBlur={onTitleBlur}
                     margin="normal"
                     fullWidth
                 />
@@ -71,8 +74,9 @@ class AddNodeForm extends React.Component<IAddNodeFormProps, IAddNodeFormState> 
                     className={classes.textField}
                     value={this.state.notes}
                     onChange={this.handleNotesChange}
+                    onBlur={onNotesBlur}
                     multiline
-                    rows="5"
+                    rowsMax="5"
                     margin="normal"
                     fullWidth
                 />
