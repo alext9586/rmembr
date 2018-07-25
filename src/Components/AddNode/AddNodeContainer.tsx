@@ -2,30 +2,21 @@ import * as React from 'react';
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import SimpleCard from '../SimpleCard/SimpleCard';
 import AddNodeForm from './AddNodeForm';
-import { Button } from '@material-ui/core';
-
-import "./AddNode.css";
+import AddNodeActions from './AddNodeActions';
 import Dependencies from '../../Services/Dependencies';
 
-const styles = ({ spacing }: Theme) => createStyles({
-    button: {
-        margin: spacing.unit,
-    },
-    input: {
-        display: 'none',
-    },
-});
+import "./AddNode.css";
 
 interface IAddNodeContainerState {
     title: string;
     notes: string;
 }
 
-interface IAddNodeContainerProps extends WithStyles<typeof styles> {
+interface IAddNodeContainerProps {
 
 }
 
-class AddNodeContainer extends React.Component<IAddNodeContainerProps, IAddNodeContainerState> {
+export default class AddNodeContainer extends React.Component<IAddNodeContainerProps, IAddNodeContainerState> {
     private nodeService = Dependencies.nodeService;
 
     constructor(props: IAddNodeContainerProps) {
@@ -63,29 +54,15 @@ class AddNodeContainer extends React.Component<IAddNodeContainerProps, IAddNodeC
         this.nodeService.addNode(this.state.title, this.state.notes);
     }
 
-    private actions(): JSX.Element {
-        const { classes } = this.props;
-
-        return (
-            <div className="add-node-action-bar">
-                <Button
-                    variant="contained"
-                    size="small"
-                    className={classes.button}
-                    onClick={this.handleSaveClick}>Cancel</Button>
-                <Button
-                    variant="contained"
-                    size="small"
-                    color="primary"
-                    className={classes.button}
-                    onClick={this.handleSaveClick}>Save</Button>
-            </div>
-        );
-    }
-
     render(): JSX.Element {
+        const actions = (
+            <AddNodeActions
+                onCancelClick={this.handleSaveClick}
+                onSaveClick={this.handleSaveClick} />
+        );
+
         return (
-            <SimpleCard title="Add Node" actions={this.actions()}>
+            <SimpleCard title="Add Node" actions={actions}>
                 <AddNodeForm
                     onTitleBlur={this.onTitleBlur}
                     onNotesBlur={this.onNotesBlur}
@@ -94,5 +71,3 @@ class AddNodeContainer extends React.Component<IAddNodeContainerProps, IAddNodeC
         );
     }
 }
-
-export default withStyles(styles)(AddNodeContainer);
