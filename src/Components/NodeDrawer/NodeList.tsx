@@ -3,7 +3,6 @@ import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/s
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Dependencies from '../../Services/Dependencies';
 import { Node } from "../../Models/Node";
 
 const styles = ({ palette }: Theme) => createStyles({
@@ -14,35 +13,25 @@ const styles = ({ palette }: Theme) => createStyles({
     },
 });
 
-interface INodeListContainerState {
-    nodes: Node[];
-}
-
-interface INodeListContainerProps extends WithStyles<typeof styles> {
+interface INodeListState {
 
 }
 
-class NodeListContainer extends React.Component<INodeListContainerProps, INodeListContainerState> {
-    private nodeService = Dependencies.nodeService;
+interface INodeListProps extends WithStyles<typeof styles> {
+    nodes: Node[]
+}
 
-    constructor(props: INodeListContainerProps) {
+class NodeList extends React.Component<INodeListProps, INodeListState> {
+    
+
+    constructor(props: INodeListProps) {
         super(props);
-
-        this.state = {
-            nodes: []
-        }
-
-        this.nodeService.initWait().then(x => {
-            this.setState({
-                nodes: this.nodeService.getNodes()
-            });
-        });
     }
 
     render(): JSX.Element {
         const { classes } = this.props;
 
-        const listItems = this.state.nodes.map(node => {
+        const listItems = this.props.nodes.map(node => {
             return (
                 <ListItem button>
                     <ListItemText primary={node.title} secondary={node.notes} />
@@ -60,4 +49,4 @@ class NodeListContainer extends React.Component<INodeListContainerProps, INodeLi
     }
 }
 
-export default withStyles(styles)(NodeListContainer);
+export default withStyles(styles)(NodeList);
