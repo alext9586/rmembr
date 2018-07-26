@@ -7,5 +7,3 @@ The app is client-side only and runs in a web browser.
 Run `npm install` to install packages.
 
 Run `npm start` from root folder to start a hot-reload dev environment.
-
-Test Commit
