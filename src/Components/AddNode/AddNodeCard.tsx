@@ -27,6 +27,7 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
 
         this.onTitleBlur = this.onTitleBlur.bind(this);
         this.onNotesBlur = this.onNotesBlur.bind(this);
+        this.handleConnectionDelete = this.handleConnectionDelete.bind(this);
         this.handleSaveClick = this.handleSaveClick.bind(this);
     }
 
@@ -46,6 +47,10 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
                 notes: event.target.value
             }
         );
+    }
+
+    private handleConnectionDelete(id: string): void {
+        console.log(id);
     }
 
     private handleSaveClick(): void {
@@ -74,7 +79,10 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
                     onTitleBlur={this.onTitleBlur}
                     onNotesBlur={this.onNotesBlur}
                 />
-                <ConnectionsList connections={connections} />
+                <ConnectionsList
+                    connections={connections}
+                    onDeleteClick={this.handleConnectionDelete}
+                />
             </SimpleCard>
         );
     }

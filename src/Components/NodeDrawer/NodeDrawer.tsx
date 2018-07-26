@@ -29,21 +29,23 @@ const styles = ({ zIndex, palette, spacing, mixins }: Theme) => createStyles({
     toolbar: mixins.toolbar,
 });
 
-interface INodeDrawerContainerState {
+interface INodeDrawerState {
     
 }
 
-interface INodeDrawerContainerProps extends WithStyles<typeof styles> {
+interface INodeDrawerProps extends WithStyles<typeof styles> {
     nodes: Node[];
+    selectedId: string;
+    onNodeClick: (id: string) => void;
 }
 
-class NodeDrawerContainer extends React.Component<INodeDrawerContainerProps, INodeDrawerContainerState> {
-    constructor(props: INodeDrawerContainerProps) {
+class NodeDrawer extends React.Component<INodeDrawerProps, INodeDrawerState> {
+    constructor(props: INodeDrawerProps) {
         super(props);
     }
 
     render(): JSX.Element {
-        const { classes, nodes } = this.props;
+        const { classes, nodes, selectedId, onNodeClick } = this.props;
 
         return (
             <div className={classes.root}>
@@ -53,7 +55,11 @@ class NodeDrawerContainer extends React.Component<INodeDrawerContainerProps, INo
                         paper: classes.drawerPaper,
                     }}>
                     <div className={classes.toolbar} />
-                    <NodeList nodes={nodes} />
+                    <NodeList
+                        nodes={nodes}
+                        selectedId={selectedId}
+                        onNodeClick={onNodeClick}
+                    />
                 </Drawer>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
@@ -64,4 +70,4 @@ class NodeDrawerContainer extends React.Component<INodeDrawerContainerProps, INo
     }
 }
 
-export default withStyles(styles)(NodeDrawerContainer);
+export default withStyles(styles)(NodeDrawer);

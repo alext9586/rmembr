@@ -27,6 +27,7 @@ interface IConnectionsListState {
 
 interface IConnectionsListProp extends WithStyles<typeof styles> {
     connections: Connection[];
+    onDeleteClick: (connectionId: string) => void;
 }
 
 class ConnectionsList extends React.Component<IConnectionsListProp, IConnectionsListState> {
@@ -43,7 +44,7 @@ class ConnectionsList extends React.Component<IConnectionsListProp, IConnections
                     <ListItemText primary={c.title} secondary={c.notes} />
                     <ListItemSecondaryAction>
                         <IconButton aria-label="Delete">
-                            <DeleteIcon />
+                            <DeleteIcon onClick={ (e) => this.props.onDeleteClick(c._id) } />
                         </IconButton>
                     </ListItemSecondaryAction>
                 </ListItem>

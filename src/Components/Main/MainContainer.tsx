@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
-import NodeDrawerContainer from '../NodeDrawer/NodeDrawerContainer';
+import NodeDrawer from '../NodeDrawer/NodeDrawer';
 import Dependencies from '../../Services/Dependencies';
 import { Node } from "../../Models/Node";
 import NodeCard from "../NodeDrawer/NodeCard";
@@ -13,7 +13,7 @@ const styles = ({ zIndex, palette, spacing, mixins }: Theme) => createStyles({
 
 interface IMainContainerState {
     nodes: Node[],
-    nodeToEdit: Node,
+    selectedNode: Node,
     viewState: ViewState
 }
 
@@ -22,6 +22,7 @@ interface IMainContainerProps extends WithStyles<typeof styles> {
 }
 
 enum ViewState {
+    Init,
     View,
     Add,
     Modify
@@ -36,24 +37,37 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
 
         this.state = {
             nodes: [],
-            nodeToEdit: new Node(),
-            viewState: ViewState.View
+            selectedNode: new Node(),
+            viewState: ViewState.Init
         };
 
+        this.onNodeClick = this.onNodeClick.bind(this);
         this.onCancelClick = this.onCancelClick.bind(this);
         this.onEditClick = this.onEditClick.bind(this);
+        this.onSaveClick = this.onSaveClick.bind(this);
+        this.onDeleteClick = this.onDeleteClick.bind(this);
 
         this.nodeService.initWait().then(x => {
             this.setState({
-                nodes: this.nodeService.getNodes()
+                //nodes: this.nodeService.getNodes()
+                nodes: this.sampleNodes
             });
+        });
+    }
+
+    private onNodeClick(id: string): void {
+        const found = this.state.nodes.filter(n => n._id === id);
+        this.setState({
+            nodes: this.state.nodes,
+            selectedNode: found[0],
+            viewState: ViewState.View
         });
     }
 
     private onCancelClick(): void {
         this.setState({
             nodes: this.state.nodes,
-            nodeToEdit: new Node(),
+            selectedNode: new Node(),
             viewState: ViewState.View
         });
     }
@@ -65,7 +79,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
     private onEditClick(node: Node): void {
         this.setState({
             nodes: this.state.nodes,
-            nodeToEdit: node,
+            selectedNode: node,
             viewState: ViewState.Modify
         });
     }
@@ -74,13 +88,14 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         console.log(node);
         this.setState({
             nodes: this.state.nodes,
-            nodeToEdit: node,
+            selectedNode: node,
             viewState: ViewState.View
         });
     }
 
     render(): JSX.Element {
-        const nodes = this.sampleNodes; //this.state.nodes;
+        const nodes = this.state.nodes;
+        const selectedNode = this.state.selectedNode;
 
         const showViewState = this.state.viewState === ViewState.View;
         const showModifyState = this.state.viewState === ViewState.Modify;
@@ -88,11 +103,15 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
 
         if (nodes.length > 0) {
             return (
-                <NodeDrawerContainer nodes={nodes}>
+                <NodeDrawer
+                    nodes={nodes}
+                    selectedId={selectedNode._id}
+                    onNodeClick={this.onNodeClick}
+                >
                     {showViewState
                         ?
                         <NodeCard
-                            node={this.sampleNodes[0]}
+                            node={selectedNode}
                             onDeleteClick={this.onDeleteClick}
                             onEditClick={this.onEditClick}
                         />
@@ -101,7 +120,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                     {showModifyState
                         ?
                         <AddNodeCard
-                            node={this.state.nodeToEdit}
+                            node={this.state.selectedNode}
                             onCancelClick={this.onCancelClick}
                             onSaveClick={this.onSaveClick}
                         />
@@ -115,7 +134,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                         />
                         : null
                     }
-                </NodeDrawerContainer>
+                </NodeDrawer>
             );
         } else {
             return (<div></div>);

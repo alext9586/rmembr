@@ -18,7 +18,9 @@ interface INodeListState {
 }
 
 interface INodeListProps extends WithStyles<typeof styles> {
-    nodes: Node[]
+    nodes: Node[];
+    selectedId: string;
+    onNodeClick: (id: string) => void;
 }
 
 class NodeList extends React.Component<INodeListProps, INodeListState> {
@@ -29,12 +31,20 @@ class NodeList extends React.Component<INodeListProps, INodeListState> {
     }
 
     render(): JSX.Element {
-        const { classes } = this.props;
+        const { classes, selectedId, onNodeClick } = this.props;
 
         const listItems = this.props.nodes.map(node => {
+            const primaryColor = node._id === selectedId ? "secondary" : "default";
             return (
-                <ListItem button key={node._id}>
-                    <ListItemText primary={node.title} secondary={node.notes} />
+                <ListItem button
+                    key={node._id}
+                    onClick={(e) => onNodeClick(node._id)}
+                >
+                    <ListItemText
+                        primary={node.title}
+                        secondary={node.notes}
+                        primaryTypographyProps={{color: primaryColor}}
+                    />
                 </ListItem>
             );
         });
