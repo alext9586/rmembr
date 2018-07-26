@@ -33,7 +33,7 @@ class NodeList extends React.Component<INodeListProps, INodeListState> {
 
         const listItems = this.props.nodes.map(node => {
             return (
-                <ListItem button>
+                <ListItem button key={node._id}>
                     <ListItemText primary={node.title} secondary={node.notes} />
                 </ListItem>
             );
@@ -41,7 +41,7 @@ class NodeList extends React.Component<INodeListProps, INodeListState> {
 
         return (
             <div className={classes.root}>
-                <List component="nav">
+                <List component="ul">
                     {listItems}
                 </List>
             </div>

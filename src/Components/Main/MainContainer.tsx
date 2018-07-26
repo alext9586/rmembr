@@ -1,44 +1,30 @@
 import * as React from 'react';
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
-import AddNodeContainer from '../AddNode/AddNodeContainer';
 import NodeDrawerContainer from '../NodeDrawer/NodeDrawerContainer';
 import Dependencies from '../../Services/Dependencies';
 import { Node } from "../../Models/Node";
+import NodeCard from "../NodeDrawer/NodeCard";
 import { SampleNodes } from '../../Models/SampleNodes';
-
-const drawerWidth = 240;
+import AddNodeCard from '../AddNode/AddNodeCard';
 
 const styles = ({ zIndex, palette, spacing, mixins }: Theme) => createStyles({
-    root: {
-        flexGrow: 1,
-        height: 430,
-        zIndex: 1,
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-    },
-    appBar: {
-        zIndex: zIndex.drawer + 1,
-    },
-    drawerPaper: {
-        position: 'relative',
-        width: drawerWidth,
-    },
-    content: {
-        flexGrow: 1,
-        backgroundColor: palette.background.default,
-        padding: spacing.unit * 3,
-        minWidth: 0, // So the Typography noWrap works
-    },
-    toolbar: mixins.toolbar,
+   
 });
 
 interface IMainContainerState {
-    nodes: Node[]
+    nodes: Node[],
+    nodeToEdit: Node,
+    viewState: ViewState
 }
 
 interface IMainContainerProps extends WithStyles<typeof styles> {
 
+}
+
+enum ViewState {
+    View,
+    Add,
+    Modify
 }
 
 class MainContainer extends React.Component<IMainContainerProps, IMainContainerState> {
@@ -49,8 +35,13 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         super(props);
 
         this.state = {
-            nodes: []
+            nodes: [],
+            nodeToEdit: new Node(),
+            viewState: ViewState.View
         };
+
+        this.onCancelClick = this.onCancelClick.bind(this);
+        this.onEditClick = this.onEditClick.bind(this);
 
         this.nodeService.initWait().then(x => {
             this.setState({
@@ -59,13 +50,71 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         });
     }
 
+    private onCancelClick(): void {
+        this.setState({
+            nodes: this.state.nodes,
+            nodeToEdit: new Node(),
+            viewState: ViewState.View
+        });
+    }
+
+    private onDeleteClick(node: Node): void {
+        console.log(node);
+    }
+
+    private onEditClick(node: Node): void {
+        this.setState({
+            nodes: this.state.nodes,
+            nodeToEdit: node,
+            viewState: ViewState.Modify
+        });
+    }
+
+    private onSaveClick(node: Node): void {
+        console.log(node);
+        this.setState({
+            nodes: this.state.nodes,
+            nodeToEdit: node,
+            viewState: ViewState.View
+        });
+    }
+
     render(): JSX.Element {
         const nodes = this.state.nodes;
+
+        const showViewState = this.state.viewState === ViewState.View;
+        const showModifyState = this.state.viewState === ViewState.Modify;
+        const showAddState = this.state.viewState === ViewState.Add;
 
         if (nodes.length > 0) {
             return (
                 <NodeDrawerContainer nodes={nodes}>
-                    <AddNodeContainer />
+                    {showViewState
+                        ?
+                        <NodeCard
+                            node={this.sampleNodes[0]}
+                            onDeleteClick={this.onDeleteClick}
+                            onEditClick={this.onEditClick}
+                        />
+                        : null
+                    }
+                    {showModifyState
+                        ?
+                        <AddNodeCard
+                            node={this.state.nodeToEdit}
+                            onCancelClick={this.onCancelClick}
+                            onSaveClick={this.onSaveClick}
+                        />
+                        : null
+                    }
+                    {showAddState
+                        ?
+                        <AddNodeCard
+                            onCancelClick={this.onCancelClick}
+                            onSaveClick={this.onSaveClick}
+                        />
+                        : null
+                    }
                 </NodeDrawerContainer>
             );
         } else {

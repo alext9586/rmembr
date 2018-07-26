@@ -4,7 +4,7 @@ import { IDbService, DbService } from "./DbService";
 
 export interface INodeService {
     initWait(): Promise<void>;
-    addNode(title: string, notes: string): void;
+    addNode(node: Node): void;
     getNode(id: string): Node;
     updateNode(node: Node): void;
     getNodes(): Node[];
@@ -25,10 +25,9 @@ export class NodeService implements INodeService {
         return this.initPromise;
     }
 
-    addNode(title: string, notes: string): void {
-        var newNode = new Node(uuid(), title, notes);
-        this.nodes.push(newNode);
-        this.dbService.putNode(newNode);
+    addNode(node: Node): void {
+        this.nodes.push(node);
+        this.dbService.putNode(node);
     }
 
     getNode(id: string): Node {

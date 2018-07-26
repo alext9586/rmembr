@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid';
-import { IConnection, Connection } from "./Connection"
+import { IConnection, Connection } from "./Connection";
+
 
 export interface INode {
     _id: string;

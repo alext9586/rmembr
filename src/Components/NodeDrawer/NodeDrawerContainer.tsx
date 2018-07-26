@@ -9,9 +9,7 @@ const drawerWidth = 240;
 const styles = ({ zIndex, palette, spacing, mixins }: Theme) => createStyles({
     root: {
         flexGrow: 1,
-        height: 430,
         zIndex: 1,
-        overflow: 'hidden',
         position: 'relative',
         display: 'flex',
     },

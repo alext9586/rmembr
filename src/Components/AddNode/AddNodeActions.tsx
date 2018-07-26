@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 
 const styles = ({ spacing }: Theme) => createStyles({
     button: {
@@ -21,7 +21,7 @@ class AddNodeActions extends React.Component<IAddNodeActionsProps, {}> {
         const { classes, onCancelClick, onSaveClick } = this.props;
 
         return (
-            <div className="add-node-action-bar">
+            <Typography align="right">
                 <Button
                     variant="contained"
                     size="small"
@@ -33,7 +33,7 @@ class AddNodeActions extends React.Component<IAddNodeActionsProps, {}> {
                     color="primary"
                     className={classes.button}
                     onClick={onSaveClick}>Save</Button>
-            </div>
+            </Typography>
         );
     }
 }

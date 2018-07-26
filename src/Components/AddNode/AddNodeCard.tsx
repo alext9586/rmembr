@@ -1,30 +1,27 @@
 import * as React from 'react';
-import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import SimpleCard from '../SimpleCard/SimpleCard';
 import AddNodeForm from './AddNodeForm';
 import AddNodeActions from './AddNodeActions';
-import Dependencies from '../../Services/Dependencies';
+import { Node } from '../../Models/Node';
 
-import "./AddNode.css";
-
-interface IAddNodeContainerState {
+interface IAddNodeCardState {
     title: string;
     notes: string;
 }
 
-interface IAddNodeContainerProps {
-
+interface IAddNodeCardProps {
+    node?: Node;
+    onCancelClick: (event: any) => void;
+    onSaveClick: (node: Node) => void;
 }
 
-export default class AddNodeContainer extends React.Component<IAddNodeContainerProps, IAddNodeContainerState> {
-    private nodeService = Dependencies.nodeService;
-
-    constructor(props: IAddNodeContainerProps) {
+export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAddNodeCardState> {
+    constructor(props: IAddNodeCardProps) {
         super(props);
 
         this.state = {
-            title: "",
-            notes: ""
+            title: this.props.node ? this.props.node.title : "",
+            notes: this.props.node ? this.props.node.notes : ""
         };
 
         this.onTitleBlur = this.onTitleBlur.bind(this);
@@ -51,19 +48,27 @@ export default class AddNodeContainer extends React.Component<IAddNodeContainerP
     }
 
     private handleSaveClick(): void {
-        this.nodeService.addNode(this.state.title, this.state.notes);
+        var node = this.props.node || new Node();
+        node.title = this.state.title;
+        node.notes = this.state.notes;
+        this.props.onSaveClick(node);
     }
 
     render(): JSX.Element {
+        const { onCancelClick } = this.props;
         const actions = (
             <AddNodeActions
-                onCancelClick={this.handleSaveClick}
+                onCancelClick={onCancelClick}
                 onSaveClick={this.handleSaveClick} />
         );
 
+        const title = this.props.node ? "Edit Node" : "Add Node";
+        const node = this.props.node;
+
         return (
-            <SimpleCard title="Add Node" actions={actions}>
+            <SimpleCard title={title} actions={actions}>
                 <AddNodeForm
+                    node={node}
                     onTitleBlur={this.onTitleBlur}
                     onNotesBlur={this.onNotesBlur}
                 />

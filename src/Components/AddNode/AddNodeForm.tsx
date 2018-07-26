@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import { Node } from '../../Models/Node';
 
 const styles = ({ spacing }: Theme) => createStyles({
     container: {
@@ -22,6 +23,7 @@ interface IAddNodeFormState {
 }
 
 interface IAddNodeFormProps extends WithStyles<typeof styles> {
+    node?: Node;
     onTitleBlur: (event: any) => void;
     onNotesBlur: (event: any) => void;
 }
@@ -31,8 +33,8 @@ class AddNodeForm extends React.Component<IAddNodeFormProps, IAddNodeFormState> 
         super(props);
 
         this.state = {
-            title: "",
-            notes: ""
+            title: this.props.node ? this.props.node.title : "",
+            notes: this.props.node ? this.props.node.notes : ""
         }
 
         this.handleTitleChange = this.handleTitleChange.bind(this)

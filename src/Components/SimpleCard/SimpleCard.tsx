@@ -50,7 +50,7 @@ class SimpleCard extends React.Component<ISimpleCardProps, {}> {
             <Card className={classes.card}>
                 <CardContent>
                     {title}
-                    <Typography align="left" component="p">
+                    <Typography align="left" component="div">
                         {this.props.children}
                     </Typography>
                 </CardContent>
