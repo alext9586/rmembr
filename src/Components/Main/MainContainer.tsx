@@ -80,7 +80,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
     }
 
     render(): JSX.Element {
-        const nodes = this.state.nodes;
+        const nodes = this.sampleNodes; //this.state.nodes;
 
         const showViewState = this.state.viewState === ViewState.View;
         const showModifyState = this.state.viewState === ViewState.Modify;

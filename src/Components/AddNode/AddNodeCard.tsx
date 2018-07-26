@@ -1,5 +1,6 @@
 import * as React from 'react';
 import SimpleCard from '../SimpleCard/SimpleCard';
+import ConnectionsList from './ConnectionsList';
 import AddNodeForm from './AddNodeForm';
 import AddNodeActions from './AddNodeActions';
 import { Node } from '../../Models/Node';
@@ -64,6 +65,7 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
 
         const title = this.props.node ? "Edit Node" : "Add Node";
         const node = this.props.node;
+        const connections = node ? node.getAllConnections() : [];
 
         return (
             <SimpleCard title={title} actions={actions}>
@@ -72,6 +74,7 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
                     onTitleBlur={this.onTitleBlur}
                     onNotesBlur={this.onNotesBlur}
                 />
+                <ConnectionsList connections={connections} />
             </SimpleCard>
         );
     }

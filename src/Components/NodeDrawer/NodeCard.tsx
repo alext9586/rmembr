@@ -64,7 +64,7 @@ class NodeCard extends React.Component<INodeCardProps, {}> {
 
         return connections.map(c => {
             return (
-                <ListItem button>
+                <ListItem button key={c._id}>
                     <ListItemText primary={c.title} secondary={c.notes}></ListItemText>
                 </ListItem>
             );
