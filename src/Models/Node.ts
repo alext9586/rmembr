@@ -50,6 +50,16 @@ export class Node {
         this.connections = newNode.getAllConnections();
     }
 
+    updateConnection(connection: Connection): void {
+        this.connections.some(c => {
+            if (c._id === connection._id) {
+                c.update(connection);
+                return true;
+            }
+            return false;
+         });
+    }
+
     fromJson(node: INode): void {
         this.id = node._id;
         this.rev = node._rev;

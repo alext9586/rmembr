@@ -6,6 +6,8 @@ import { Node } from "../../Models/Node";
 import NodeCard from "../NodeDrawer/NodeCard";
 import { SampleNodes } from '../../Models/SampleNodes';
 import AddNodeCard from '../AddNode/AddNodeCard';
+import { Connection } from '../../Models/Connection';
+import AddConnectionCard from '../AddConnection/AddConnectionCard';
 
 const styles = ({ zIndex, palette, spacing, mixins }: Theme) => createStyles({
    
@@ -14,6 +16,7 @@ const styles = ({ zIndex, palette, spacing, mixins }: Theme) => createStyles({
 interface IMainContainerState {
     nodes: Node[],
     selectedNode: Node,
+    selectedConnection: Connection,
     viewState: ViewState
 }
 
@@ -25,7 +28,8 @@ enum ViewState {
     Init,
     View,
     Add,
-    Modify
+    ModifyNode,
+    ModifyConnection
 }
 
 class MainContainer extends React.Component<IMainContainerProps, IMainContainerState> {
@@ -36,22 +40,68 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         super(props);
 
         this.state = {
-            nodes: [],
+            //nodes: [],
+            nodes: this.sampleNodes,
             selectedNode: new Node(),
+            selectedConnection: new Connection(),
             viewState: ViewState.Init
         };
 
         this.onNodeClick = this.onNodeClick.bind(this);
+        this.onConnectionClick = this.onConnectionClick.bind(this);
+        this.onConnectionCancelClick = this.onConnectionCancelClick.bind(this);
+        this.onConnectionSaveClick = this.onConnectionSaveClick.bind(this);
         this.onCancelClick = this.onCancelClick.bind(this);
         this.onEditClick = this.onEditClick.bind(this);
         this.onSaveClick = this.onSaveClick.bind(this);
         this.onDeleteClick = this.onDeleteClick.bind(this);
 
-        this.nodeService.initWait().then(x => {
-            this.setState({
-                //nodes: this.nodeService.getNodes()
-                nodes: this.sampleNodes
-            });
+        // this.nodeService.initWait().then(x => {
+        //     this.setState({
+        //         //nodes: this.nodeService.getNodes()
+        //         nodes: this.sampleNodes
+        //     });
+        // });
+    }
+
+    private onConnectionClick(id: string): void {
+        const connection = this.state.selectedNode.getConnection(id);
+        debugger;
+        this.setState({
+            nodes: this.state.nodes,
+            selectedNode: this.state.selectedNode,
+            selectedConnection: connection,
+            viewState: ViewState.ModifyConnection
+        });
+    }
+
+    private onConnectionCancelClick(): void {
+        this.setState({
+            nodes: this.state.nodes,
+            selectedNode: this.state.selectedNode,
+            selectedConnection: new Connection(),
+            viewState: ViewState.ModifyNode
+        });
+    }
+
+    private onConnectionSaveClick(connection: Connection): void {
+        var selectedNode = this.state.selectedNode;
+        selectedNode.updateConnection(connection);
+
+        var nodes = this.state.nodes;
+        nodes.some(n => {
+            if (n._id === this.state.selectedNode._id) {
+                n.update(selectedNode);
+                return true;
+            }
+            return false;
+        });
+
+        this.setState({
+            nodes: nodes,
+            selectedNode: selectedNode,
+            selectedConnection: new Connection(),
+            viewState: ViewState.ModifyNode
         });
     }
 
@@ -60,6 +110,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         this.setState({
             nodes: this.state.nodes,
             selectedNode: found[0],
+            selectedConnection: new Connection(),
             viewState: ViewState.View
         });
     }
@@ -68,6 +119,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         this.setState({
             nodes: this.state.nodes,
             selectedNode: new Node(),
+            selectedConnection: new Connection(),
             viewState: ViewState.View
         });
     }
@@ -80,7 +132,8 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         this.setState({
             nodes: this.state.nodes,
             selectedNode: node,
-            viewState: ViewState.Modify
+            selectedConnection: new Connection(),
+            viewState: ViewState.ModifyNode
         });
     }
 
@@ -89,16 +142,18 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         this.setState({
             nodes: this.state.nodes,
             selectedNode: node,
+            selectedConnection: new Connection(),
             viewState: ViewState.View
         });
     }
 
     render(): JSX.Element {
         const nodes = this.state.nodes;
-        const selectedNode = this.state.selectedNode;
+        const { selectedNode, selectedConnection } = this.state;
 
         const showViewState = this.state.viewState === ViewState.View;
-        const showModifyState = this.state.viewState === ViewState.Modify;
+        const showModifyNodeState = this.state.viewState === ViewState.ModifyNode;
+        const showModifyConnectionState = this.state.viewState === ViewState.ModifyConnection;
         const showAddState = this.state.viewState === ViewState.Add;
 
         if (nodes.length > 0) {
@@ -117,10 +172,11 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                         />
                         : null
                     }
-                    {showModifyState
+                    {showModifyNodeState
                         ?
                         <AddNodeCard
                             node={this.state.selectedNode}
+                            onConnectionClick={this.onConnectionClick}
                             onCancelClick={this.onCancelClick}
                             onSaveClick={this.onSaveClick}
                         />
@@ -130,8 +186,18 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                         ?
                         <AddNodeCard
                             onCancelClick={this.onCancelClick}
+                            onConnectionClick={this.onConnectionClick}
                             onSaveClick={this.onSaveClick}
                         />
+                        : null
+                    }
+                    {showModifyConnectionState
+                        ?
+                        <AddConnectionCard
+                            connection={selectedConnection}
+                            onCancelClick={this.onConnectionCancelClick}
+                            onSaveClick={this.onConnectionSaveClick}
+                        ></AddConnectionCard>
                         : null
                     }
                 </NodeDrawer>

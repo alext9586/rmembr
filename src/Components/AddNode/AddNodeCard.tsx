@@ -1,18 +1,18 @@
 import * as React from 'react';
 import SimpleCard from '../SimpleCard/SimpleCard';
 import ConnectionsList from './ConnectionsList';
-import AddNodeForm from './AddNodeForm';
-import AddNodeActions from './AddNodeActions';
+import TitleNotesForm from '../TitleNotesForm/TitleNotesForm';
+import CancelSaveActions from '../SimpleCard/CancelSaveActions';
 import { Node } from '../../Models/Node';
 
 interface IAddNodeCardState {
-    title: string;
-    notes: string;
+    node: Node;
 }
 
 interface IAddNodeCardProps {
     node?: Node;
-    onCancelClick: (event: any) => void;
+    onConnectionClick: (connectionId: String) => void;
+    onCancelClick: () => void;
     onSaveClick: (node: Node) => void;
 }
 
@@ -21,8 +21,7 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
         super(props);
 
         this.state = {
-            title: this.props.node ? this.props.node.title : "",
-            notes: this.props.node ? this.props.node.notes : ""
+            node: this.props.node || new Node()
         };
 
         this.onTitleBlur = this.onTitleBlur.bind(this);
@@ -32,19 +31,23 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
     }
 
     private onTitleBlur(event: any): void {
+        var node = this.state.node;
+        node.title = event.target.value;
+
         this.setState(
             {
-                title: event.target.value,
-                notes: this.state.notes
+                node: node
             }
         );
     }
 
     private onNotesBlur(event: any): void {
+        var node = this.state.node;
+        node.notes = event.target.value;
+
         this.setState(
             {
-                title: this.state.title,
-                notes: event.target.value
+                node: node
             }
         );
     }
@@ -54,33 +57,35 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
     }
 
     private handleSaveClick(): void {
-        var node = this.props.node || new Node();
-        node.title = this.state.title;
-        node.notes = this.state.notes;
+        const node = this.state.node;
         this.props.onSaveClick(node);
     }
 
     render(): JSX.Element {
-        const { onCancelClick } = this.props;
+        const { onConnectionClick, onCancelClick } = this.props;
         const actions = (
-            <AddNodeActions
+            <CancelSaveActions
                 onCancelClick={onCancelClick}
                 onSaveClick={this.handleSaveClick} />
         );
 
-        const title = this.props.node ? "Edit Node" : "Add Node";
-        const node = this.props.node;
+        // Check if it was even passed in
+        const cardTitle = this.props.node ? "Edit Node" : "Add Node";
+
+        const node = this.state.node;
         const connections = node ? node.getAllConnections() : [];
 
         return (
-            <SimpleCard title={title} actions={actions}>
-                <AddNodeForm
-                    node={node}
+            <SimpleCard title={cardTitle} actions={actions}>
+                <TitleNotesForm
+                    title={node.title}
+                    notes={node.notes}
                     onTitleBlur={this.onTitleBlur}
                     onNotesBlur={this.onNotesBlur}
                 />
                 <ConnectionsList
                     connections={connections}
+                    onClick={onConnectionClick}
                     onDeleteClick={this.handleConnectionDelete}
                 />
             </SimpleCard>

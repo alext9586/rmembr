@@ -25,6 +25,12 @@ export class Connection {
         this.id = id;
     }
 
+    update(connection: Connection): void {
+        this.nextId = connection.nextId;
+        this.title = connection.title;
+        this.notes = connection.notes;
+    }
+
     fromJson(connection: IConnection): void {
         this.id = connection._id;
         this.rev = connection._rev;

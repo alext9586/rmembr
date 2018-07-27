@@ -11,12 +11,12 @@ const styles = ({ spacing }: Theme) => createStyles({
     },
 });
 
-interface IAddNodeActionsProps extends WithStyles<typeof styles> {
+interface ICancelSaveActionsProps extends WithStyles<typeof styles> {
     onCancelClick: (event: any) => void;
     onSaveClick: (event: any) => void;
 }
 
-class AddNodeActions extends React.Component<IAddNodeActionsProps, {}> {
+class CancelSaveActions extends React.Component<ICancelSaveActionsProps, {}> {
     render(): JSX.Element {
         const { classes, onCancelClick, onSaveClick } = this.props;
 
@@ -38,4 +38,4 @@ class AddNodeActions extends React.Component<IAddNodeActionsProps, {}> {
     }
 }
 
-export default withStyles(styles)(AddNodeActions);
+export default withStyles(styles)(CancelSaveActions);

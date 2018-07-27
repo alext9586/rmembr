@@ -17,24 +17,25 @@ const styles = ({ spacing }: Theme) => createStyles({
     },
 });
 
-interface IAddNodeFormState {
-    title: string;
-    notes: string;
+interface ITitleNotesFormState {
+    title?: string;
+    notes?: string;
 }
 
-interface IAddNodeFormProps extends WithStyles<typeof styles> {
-    node?: Node;
+interface ITitleNotesFormProps extends WithStyles<typeof styles> {
+    title: string;
+    notes: string;
     onTitleBlur: (event: any) => void;
     onNotesBlur: (event: any) => void;
 }
 
-class AddNodeForm extends React.Component<IAddNodeFormProps, IAddNodeFormState> {
-    constructor(props: IAddNodeFormProps) {
+class TitleNotesForm extends React.Component<ITitleNotesFormProps, ITitleNotesFormState> {
+    constructor(props: ITitleNotesFormProps) {
         super(props);
 
         this.state = {
-            title: this.props.node ? this.props.node.title : "",
-            notes: this.props.node ? this.props.node.notes : ""
+            title: this.props.title ? this.props.title : "",
+            notes: this.props.notes ? this.props.notes : ""
         }
 
         this.handleTitleChange = this.handleTitleChange.bind(this)
@@ -87,4 +88,4 @@ class AddNodeForm extends React.Component<IAddNodeFormProps, IAddNodeFormState> 
     }
 }
 
-export default withStyles(styles)(AddNodeForm);
+export default withStyles(styles)(TitleNotesForm);
