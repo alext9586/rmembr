@@ -54,7 +54,6 @@ class NodeDrawer extends React.Component<INodeDrawerProps, INodeDrawerState> {
                     classes={{
                         paper: classes.drawerPaper,
                     }}>
-                    <div className={classes.toolbar} />
                     <NodeList
                         nodes={nodes}
                         selectedId={selectedId}
@@ -62,7 +61,6 @@ class NodeDrawer extends React.Component<INodeDrawerProps, INodeDrawerState> {
                     />
                 </Drawer>
                 <main className={classes.content}>
-                    <div className={classes.toolbar} />
                     {this.props.children}
                 </main>
             </div>

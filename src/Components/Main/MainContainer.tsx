@@ -1,17 +1,28 @@
 import * as React from 'react';
+import { AppBar, Toolbar, IconButton, Typography, CircularProgress } from '@material-ui/core';
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import NodeDrawer from '../NodeDrawer/NodeDrawer';
 import Dependencies from '../../Services/Dependencies';
 import { Node } from "../../Models/Node";
+import { Connection } from '../../Models/Connection';
 import NodeCard from "../NodeDrawer/NodeCard";
 import AddNodeCard from '../AddNode/AddNodeCard';
-import { Connection } from '../../Models/Connection';
 import AddConnectionCard from '../AddConnection/AddConnectionCard';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { Add } from '@material-ui/icons';
 
 const styles = ({ spacing }: Theme) => createStyles({
+    root: {
+        flexGrow: 1,
+    },
     progress: {
         margin: spacing.unit * 2,
+    },
+    flex: {
+        flexGrow: 1,
+    },
+    menuButton: {
+        marginLeft: -12,
+        marginRight: 20,
     },
 });
 
@@ -48,14 +59,15 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
             viewState: ViewState.Loading
         };
 
+        this.onNodeAddClick = this.onNodeAddClick.bind(this);
         this.onNodeClick = this.onNodeClick.bind(this);
         this.onConnectionClick = this.onConnectionClick.bind(this);
         this.onConnectionCancelClick = this.onConnectionCancelClick.bind(this);
         this.onConnectionSaveClick = this.onConnectionSaveClick.bind(this);
-        this.onCancelClick = this.onCancelClick.bind(this);
-        this.onEditClick = this.onEditClick.bind(this);
-        this.onSaveClick = this.onSaveClick.bind(this);
-        this.onDeleteClick = this.onDeleteClick.bind(this);
+        this.onNodeCancelClick = this.onNodeCancelClick.bind(this);
+        this.onNodeEditClick = this.onNodeEditClick.bind(this);
+        this.onNodeSaveClick = this.onNodeSaveClick.bind(this);
+        this.onNodeDeleteClick = this.onNodeDeleteClick.bind(this);
 
         this.render();
 
@@ -119,16 +131,27 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         });
     }
 
-    private onCancelClick(): void {
+    private onNodeAddClick(): void {
         this.setState({
             nodes: this.state.nodes,
             selectedNode: new Node(),
             selectedConnection: new Connection(),
-            viewState: ViewState.View
+            viewState: ViewState.Add
         });
     }
 
-    private onDeleteClick(node: Node): void {
+    private onNodeCancelClick(): void {
+        const viewState = (this.state.selectedNode.isEmpty) ? ViewState.Ready : ViewState.View;
+
+        this.setState({
+            nodes: this.state.nodes,
+            selectedNode: this.state.selectedNode,
+            selectedConnection: new Connection(),
+            viewState: viewState
+        });
+    }
+
+    private onNodeDeleteClick(node: Node): void {
         this.nodeService.deleteNode(node._id);
         this.setState({
             nodes: this.nodeService.getNodes(),
@@ -138,7 +161,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         });
     }
 
-    private onEditClick(node: Node): void {
+    private onNodeEditClick(node: Node): void {
         this.setState({
             nodes: this.state.nodes,
             selectedNode: node,
@@ -147,17 +170,19 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         });
     }
 
-    private onSaveClick(node: Node): void {
-        console.log(node);
+    private onNodeSaveClick(node: Node): void {
+        this.nodeService.addNode(node);
+        const nodes = this.nodeService.getNodes();
+
         this.setState({
-            nodes: this.state.nodes,
+            nodes: nodes,
             selectedNode: node,
             selectedConnection: new Connection(),
             viewState: ViewState.View
         });
     }
 
-    render(): JSX.Element {
+    renderNodeDrawer(): JSX.Element {
         const nodes = this.state.nodes;
         const { selectedNode, selectedConnection } = this.state;
         const { classes } = this.props;
@@ -178,8 +203,8 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                         ?
                         <NodeCard
                             node={selectedNode}
-                            onDeleteClick={this.onDeleteClick}
-                            onEditClick={this.onEditClick}
+                            onDeleteClick={this.onNodeDeleteClick}
+                            onEditClick={this.onNodeEditClick}
                         />
                         : null
                     }
@@ -188,17 +213,17 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                         <AddNodeCard
                             node={this.state.selectedNode}
                             onConnectionClick={this.onConnectionClick}
-                            onCancelClick={this.onCancelClick}
-                            onSaveClick={this.onSaveClick}
+                            onCancelClick={this.onNodeCancelClick}
+                            onSaveClick={this.onNodeSaveClick}
                         />
                         : null
                     }
                     {showAddState
                         ?
                         <AddNodeCard
-                            onCancelClick={this.onCancelClick}
+                            onCancelClick={this.onNodeCancelClick}
                             onConnectionClick={this.onConnectionClick}
-                            onSaveClick={this.onSaveClick}
+                            onSaveClick={this.onNodeSaveClick}
                         />
                         : null
                     }
@@ -216,6 +241,36 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         } else {
             return (<CircularProgress className={classes.progress} size={50} />);
         }
+    }
+
+    render(): JSX.Element {
+        const { classes } = this.props;
+
+        return (
+            <div className={classes.root}>
+                <AppBar position="static">
+                    <Toolbar>
+                        <Typography
+                            align="left"
+                            variant="title"
+                            color="inherit"
+                            className={classes.flex}
+                        >
+                            Rmembr
+                        </Typography>
+                        <IconButton
+                            className={classes.menuButton}
+                            color="inherit"
+                            aria-label="Menu"
+                            onClick={this.onNodeAddClick}
+                        >
+                            <Add />
+                        </IconButton>
+                    </Toolbar>
+                </AppBar>
+                {this.renderNodeDrawer()}
+            </div>
+        );
     }
 }
 

@@ -27,6 +27,10 @@ export class Node {
         this.id = id;
     }
 
+    get isEmpty(): boolean {
+        return this.title === "" && this.notes === "";
+    }
+
     addConnection(connection: Connection): void {
         this.connections.push(connection);
     }
