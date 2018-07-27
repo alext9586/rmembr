@@ -1,6 +1,5 @@
 import { Node } from "../Models/Node";
 import { IDbService } from "./DbService";
-import { resolve } from "dns";
 import { SampleNodes } from "../Models/SampleNodes";
 
 export class MockDataService implements IDbService {
@@ -12,16 +11,28 @@ export class MockDataService implements IDbService {
 
     putNode(node: Node): Promise<string> {
         var promise = new Promise<string>((resolve, reject) => {
-            setTimeout(resolve(node._id), 100);
+            var found = this.nodes.some(n => {
+                if (n._id === node._id) {
+                    n.update(node);
+                    return true;
+                }
+                return false;
+            });
+
+            if (!found) {
+                this.nodes.push(node);
+            }
+
+            resolve(node._id);
         });
 
         return (promise);
     }
 
     updateNodes(nodes: Node[]): Promise<Node[]> {
-        this.nodes = nodes;
         var promise = new Promise<Node[]>((resolve, reject) => {
-            setTimeout(resolve(this.nodes), 100);
+            this.nodes = nodes;
+            resolve(this.nodes);
         });
 
         return (promise);
@@ -29,7 +40,7 @@ export class MockDataService implements IDbService {
 
     getNodes(): Promise<Node[]> {
         var promise = new Promise<Node[]>((resolve, reject) => {
-            setTimeout(resolve(this.nodes), 100);
+            setTimeout(resolve(this.nodes), 1000);
         });
         
         return (promise);

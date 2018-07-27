@@ -7,6 +7,7 @@ export interface INodeService {
     addNode(node: Node): void;
     getNode(id: string): Node;
     updateNode(node: Node): void;
+    deleteNode(id: string): boolean;
     getNodes(): Node[];
 }
 
@@ -46,6 +47,16 @@ export class NodeService implements INodeService {
             }
             return false;
         });
+    }
+
+    deleteNode(id: string): boolean {
+        var found = this.nodes.some(n => n._id === id);
+
+        if (found) {
+            this.nodes = this.nodes.filter(n => n._id !== id);
+        }
+
+        return found;
     }
 
     getNodes(): Node[] {

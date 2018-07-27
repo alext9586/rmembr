@@ -28,7 +28,7 @@ interface IMainContainerProps extends WithStyles<typeof styles> {
 
 enum ViewState {
     Loading,
-    Init,
+    Ready,
     View,
     Add,
     ModifyNode,
@@ -57,7 +57,6 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         this.onSaveClick = this.onSaveClick.bind(this);
         this.onDeleteClick = this.onDeleteClick.bind(this);
 
-        console.log(this.state.viewState);
         this.render();
 
         this.nodeService.initWait().then(x => {
@@ -65,9 +64,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                 nodes: this.nodeService.getNodes(),
                 selectedNode: new Node(),
                 selectedConnection: new Connection(),
-                viewState: ViewState.Init
-            }, () => {
-                console.log(this.state.viewState);
+                viewState: ViewState.Ready
             });
         });
     }
@@ -132,7 +129,13 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
     }
 
     private onDeleteClick(node: Node): void {
-        console.log(node);
+        this.nodeService.deleteNode(node._id);
+        this.setState({
+            nodes: this.nodeService.getNodes(),
+            selectedNode: new Node(),
+            selectedConnection: new Connection(),
+            viewState: ViewState.Ready
+        });
     }
 
     private onEditClick(node: Node): void {

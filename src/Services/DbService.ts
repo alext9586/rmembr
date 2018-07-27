@@ -1,5 +1,6 @@
 import PouchDB from "pouchdb";
 import { INode, Node } from "../Models/Node";
+import { resolve } from "url";
 
 // https://www.bennadel.com/blog/3194-experimenting-with-simple-crud-operations-using-pouchdb-in-angular-2-1-1.htm
 
@@ -9,7 +10,7 @@ export interface IDbService {
     getNodes(): Promise<Node[]>;
 }
 
-export class DbService {
+export class DbService implements IDbService {
     private db = new PouchDB("rmembr", { auto_compaction: true });
 
     constructor() {
