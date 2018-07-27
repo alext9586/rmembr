@@ -20,7 +20,6 @@ const styles = ({ spacing }: Theme) => createStyles({
 });
 
 interface IMainContainerState {
-    nodes: Node[],
     selectedNode: Node,
     selectedConnection: Connection,
     viewState: ViewState
@@ -46,7 +45,6 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         super(props);
 
         this.state = {
-            nodes: [],
             selectedNode: new Node(),
             selectedConnection: new Connection(),
             viewState: ViewState.Loading
@@ -60,6 +58,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         this.onConnectionSaveClick = this.onConnectionSaveClick.bind(this);
         this.onNodeCancelClick = this.onNodeCancelClick.bind(this);
         this.onNodeEditClick = this.onNodeEditClick.bind(this);
+        this.onNodeEditSaveClick = this.onNodeEditSaveClick.bind(this);
         this.onNodeSaveClick = this.onNodeSaveClick.bind(this);
         this.onNodeDeleteClick = this.onNodeDeleteClick.bind(this);
 
@@ -67,7 +66,6 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
 
         this.nodeService.initWait().then(x => {
             this.setState({
-                nodes: this.nodeService.getNodes(),
                 selectedNode: new Node(),
                 selectedConnection: new Connection(),
                 viewState: ViewState.Ready
@@ -93,18 +91,9 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
     private onConnectionSaveClick(connection: Connection): void {
         var selectedNode = this.state.selectedNode;
         selectedNode.updateConnection(connection);
-
-        var nodes = this.state.nodes;
-        nodes.some(n => {
-            if (n._id === this.state.selectedNode._id) {
-                n.update(selectedNode);
-                return true;
-            }
-            return false;
-        });
+        this.nodeService.updateNode(selectedNode);
 
         this.setState({
-            nodes: nodes,
             selectedNode: selectedNode,
             selectedConnection: new Connection(),
             viewState: ViewState.ModifyNode
@@ -112,7 +101,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
     }
 
     private onNodeClick(id: string): void {
-        const found = this.state.nodes.filter(n => n._id === id);
+        const found = this.nodeService.getNodes().filter(n => n._id === id);
         this.setState({
             selectedNode: found[0],
             selectedConnection: new Connection(),
@@ -140,7 +129,6 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
     private onNodeDeleteClick(node: Node): void {
         this.nodeService.deleteNode(node._id);
         this.setState({
-            nodes: this.nodeService.getNodes(),
             selectedNode: new Node(),
             selectedConnection: new Connection(),
             viewState: ViewState.Ready
@@ -155,12 +143,20 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         });
     }
 
-    private onNodeSaveClick(node: Node): void {
-        this.nodeService.addNode(node);
-        const nodes = this.nodeService.getNodes();
+    private onNodeEditSaveClick(node: Node): void {
+        this.nodeService.updateNode(node);
 
         this.setState({
-            nodes: nodes,
+            selectedNode: node,
+            selectedConnection: new Connection(),
+            viewState: ViewState.View
+        });
+    }
+
+    private onNodeSaveClick(node: Node): void {
+        this.nodeService.addNode(node);
+
+        this.setState({
             selectedNode: node,
             selectedConnection: new Connection(),
             viewState: ViewState.View
@@ -176,7 +172,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
     }
 
     renderNodeDrawer(): JSX.Element {
-        const nodes = this.state.nodes;
+        const nodes = this.nodeService.getNodes();
         const { selectedNode, selectedConnection } = this.state;
         const { classes } = this.props;
 
@@ -208,7 +204,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                             node={this.state.selectedNode}
                             onConnectionClick={this.onConnectionClick}
                             onCancelClick={this.onNodeCancelClick}
-                            onSaveClick={this.onNodeSaveClick}
+                            onSaveClick={this.onNodeEditSaveClick}
                         />
                         : null
                     }
