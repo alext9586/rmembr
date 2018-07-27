@@ -4,13 +4,15 @@ import NodeDrawer from '../NodeDrawer/NodeDrawer';
 import Dependencies from '../../Services/Dependencies';
 import { Node } from "../../Models/Node";
 import NodeCard from "../NodeDrawer/NodeCard";
-import { SampleNodes } from '../../Models/SampleNodes';
 import AddNodeCard from '../AddNode/AddNodeCard';
 import { Connection } from '../../Models/Connection';
 import AddConnectionCard from '../AddConnection/AddConnectionCard';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-const styles = ({ zIndex, palette, spacing, mixins }: Theme) => createStyles({
-   
+const styles = ({ spacing }: Theme) => createStyles({
+    progress: {
+        margin: spacing.unit * 2,
+    },
 });
 
 interface IMainContainerState {
@@ -25,6 +27,7 @@ interface IMainContainerProps extends WithStyles<typeof styles> {
 }
 
 enum ViewState {
+    Loading,
     Init,
     View,
     Add,
@@ -34,17 +37,15 @@ enum ViewState {
 
 class MainContainer extends React.Component<IMainContainerProps, IMainContainerState> {
     private nodeService = Dependencies.nodeService;
-    private sampleNodes = SampleNodes.create(4);
 
     constructor(props: IMainContainerProps) {
         super(props);
 
         this.state = {
-            //nodes: [],
-            nodes: this.sampleNodes,
+            nodes: [],
             selectedNode: new Node(),
             selectedConnection: new Connection(),
-            viewState: ViewState.Init
+            viewState: ViewState.Loading
         };
 
         this.onNodeClick = this.onNodeClick.bind(this);
@@ -56,17 +57,23 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         this.onSaveClick = this.onSaveClick.bind(this);
         this.onDeleteClick = this.onDeleteClick.bind(this);
 
-        // this.nodeService.initWait().then(x => {
-        //     this.setState({
-        //         //nodes: this.nodeService.getNodes()
-        //         nodes: this.sampleNodes
-        //     });
-        // });
+        console.log(this.state.viewState);
+        this.render();
+
+        this.nodeService.initWait().then(x => {
+            this.setState({
+                nodes: this.nodeService.getNodes(),
+                selectedNode: new Node(),
+                selectedConnection: new Connection(),
+                viewState: ViewState.Init
+            }, () => {
+                console.log(this.state.viewState);
+            });
+        });
     }
 
     private onConnectionClick(id: string): void {
         const connection = this.state.selectedNode.getConnection(id);
-        debugger;
         this.setState({
             nodes: this.state.nodes,
             selectedNode: this.state.selectedNode,
@@ -150,6 +157,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
     render(): JSX.Element {
         const nodes = this.state.nodes;
         const { selectedNode, selectedConnection } = this.state;
+        const { classes } = this.props;
 
         const showViewState = this.state.viewState === ViewState.View;
         const showModifyNodeState = this.state.viewState === ViewState.ModifyNode;
@@ -203,7 +211,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                 </NodeDrawer>
             );
         } else {
-            return (<div></div>);
+            return (<CircularProgress className={classes.progress} size={50} />);
         }
     }
 }

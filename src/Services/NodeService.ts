@@ -1,6 +1,6 @@
-import { v4 as uuid } from 'uuid';
 import { Node } from "../Models/Node";
 import { IDbService, DbService } from "./DbService";
+import { MockDataService } from "./MockDataService";
 
 export interface INodeService {
     initWait(): Promise<void>;
@@ -12,7 +12,8 @@ export interface INodeService {
 
 export class NodeService implements INodeService {
     private nodes: Node[] = [];
-    private dbService: IDbService = new DbService();
+    // private dbService: IDbService = new DbService();
+    private dbService: IDbService = new MockDataService();
     private initPromise: Promise<void>;
 
     constructor() {
