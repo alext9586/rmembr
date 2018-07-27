@@ -41,14 +41,12 @@ class TitleNotesForm extends React.Component<ITitleNotesFormProps, ITitleNotesFo
 
     private handleTitleChange(event: React.ChangeEvent<HTMLInputElement>): void {
         this.setState({
-            title: event.target.value,
-            notes: this.state.notes
+            title: event.target.value
         });
     }
 
     private handleNotesChange(event: React.ChangeEvent<HTMLInputElement>): void {
         this.setState({
-            title: this.state.title,
             notes: event.target.value
         });
     }

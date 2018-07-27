@@ -78,8 +78,6 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
     private onConnectionClick(id: string): void {
         const connection = this.state.selectedNode.getConnection(id);
         this.setState({
-            nodes: this.state.nodes,
-            selectedNode: this.state.selectedNode,
             selectedConnection: connection,
             viewState: ViewState.ModifyConnection
         });
@@ -87,8 +85,6 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
 
     private onConnectionCancelClick(): void {
         this.setState({
-            nodes: this.state.nodes,
-            selectedNode: this.state.selectedNode,
             selectedConnection: new Connection(),
             viewState: ViewState.ModifyNode
         });
@@ -118,7 +114,6 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
     private onNodeClick(id: string): void {
         const found = this.state.nodes.filter(n => n._id === id);
         this.setState({
-            nodes: this.state.nodes,
             selectedNode: found[0],
             selectedConnection: new Connection(),
             viewState: ViewState.View
@@ -127,7 +122,6 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
 
     private onNodeAddClick(): void {
         this.setState({
-            nodes: this.state.nodes,
             selectedNode: new Node(),
             selectedConnection: new Connection(),
             viewState: ViewState.Add
@@ -138,8 +132,6 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         const viewState = (this.state.selectedNode.isEmpty) ? ViewState.Ready : ViewState.View;
 
         this.setState({
-            nodes: this.state.nodes,
-            selectedNode: this.state.selectedNode,
             selectedConnection: new Connection(),
             viewState: viewState
         });
@@ -157,7 +149,6 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
 
     private onNodeEditClick(node: Node): void {
         this.setState({
-            nodes: this.state.nodes,
             selectedNode: node,
             selectedConnection: new Connection(),
             viewState: ViewState.ModifyNode
@@ -178,7 +169,6 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
 
     private onNodeCloseClick(): void {
         this.setState({
-            nodes: this.state.nodes,
             selectedNode: new Node(),
             selectedConnection: new Connection(),
             viewState: ViewState.Ready
