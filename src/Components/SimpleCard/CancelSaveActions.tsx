@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import { Button, Typography } from '@material-ui/core';
+import { ArrowBack, Check } from '@material-ui/icons';
 
 const styles = ({ spacing }: Theme) => createStyles({
     button: {
@@ -23,16 +24,16 @@ class CancelSaveActions extends React.Component<ICancelSaveActionsProps, {}> {
         return (
             <Typography align="right">
                 <Button
-                    variant="contained"
-                    size="small"
+                    variant="fab"
                     className={classes.button}
-                    onClick={onCancelClick}>Cancel</Button>
+                    onClick={onCancelClick}
+                    aria-label="Back"><ArrowBack /></Button>
                 <Button
-                    variant="contained"
-                    size="small"
+                    variant="fab"
                     color="primary"
                     className={classes.button}
-                    onClick={onSaveClick}>Save</Button>
+                    onClick={onSaveClick}
+                    aria-label="Save"><Check /></Button>
             </Typography>
         );
     }

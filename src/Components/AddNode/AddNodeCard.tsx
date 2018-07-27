@@ -76,7 +76,10 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
         const connections = node ? node.getAllConnections() : [];
 
         return (
-            <SimpleCard title={cardTitle} actions={actions}>
+            <SimpleCard
+                title={cardTitle}
+                actions={actions}
+                onClose={onCancelClick}>
                 <TitleNotesForm
                     title={node.title}
                     notes={node.notes}

@@ -10,7 +10,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 const styles = ({ palette, spacing }: Theme) => createStyles({
     root: {
         width: '100%',
-        maxWidth: 360,
         backgroundColor: palette.background.paper,
     },
     button: {

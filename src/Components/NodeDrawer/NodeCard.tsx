@@ -6,6 +6,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { Node } from "../../Models/Node";
 import SimpleCard from '../SimpleCard/SimpleCard';
+import { Edit, Delete } from '@material-ui/icons';
 
 const styles = ({ spacing }: Theme) => createStyles({
     button: {
@@ -20,6 +21,7 @@ interface INodeCardProps extends WithStyles<typeof styles> {
     node: Node;
     onDeleteClick: (node: Node) => void;
     onEditClick: (node: Node) => void;
+    onCloseClick: () => void;
 }
 
 class NodeCard extends React.Component<INodeCardProps, {}> {
@@ -44,17 +46,17 @@ class NodeCard extends React.Component<INodeCardProps, {}> {
         return (
             <Typography align="right">
                 <Button
-                    variant="contained"
-                    size="small"
+                    variant="fab"
                     color="secondary"
                     className={classes.button}
-                    onClick={this.handleDeleteClick}>Delete</Button>
+                    onClick={this.handleDeleteClick}
+                    aria-label="Delete"><Delete /></Button>
                 <Button
-                    variant="contained"
-                    size="small"
+                    variant="fab"
                     color="primary"
                     className={classes.button}
-                    onClick={this.handleEditClick}>Edit</Button>
+                    onClick={this.handleEditClick}
+                    aria-label="Edit"><Edit /></Button>
             </Typography>
         );
     }
@@ -72,12 +74,15 @@ class NodeCard extends React.Component<INodeCardProps, {}> {
     }
 
     render(): JSX.Element {
-        const { node } = this.props;
+        const { node, onCloseClick } = this.props;
         const connections = this.renderConnections(node);
         const actions = this.renderActions();
 
         return (
-            <SimpleCard title={node.title} actions={actions}>
+            <SimpleCard
+                title={node.title}
+                actions={actions}
+                onClose={onCloseClick}>
                 {node.notes}
                 <List component="ul">
                     {connections}

@@ -10,7 +10,7 @@ interface IAddConnectionCardState {
 
 interface IAddConnectionCardProps {
     connection?: Connection;
-    onCancelClick: (event: any) => void;
+    onCancelClick: () => void;
     onSaveClick: (connection: Connection) => void;
 }
 
@@ -67,7 +67,10 @@ export default class AddConnectionCard extends React.Component<IAddConnectionCar
         const cardTitle = this.props.connection ? "Edit Connection" : "Add Connection"
 
         return (
-            <SimpleCard title={cardTitle} actions={actions}>
+            <SimpleCard
+                title={cardTitle}
+                actions={actions}
+                onClose={onCancelClick}>
                 <TitleNotesForm
                     title={title}
                     notes={notes}

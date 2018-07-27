@@ -12,9 +12,6 @@ const styles = ({ spacing }: Theme) => createStyles({
         marginLeft: spacing.unit,
         marginRight: spacing.unit,
     },
-    menu: {
-        width: 200,
-    },
 });
 
 interface ITitleNotesFormState {

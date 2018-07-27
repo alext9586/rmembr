@@ -1,18 +1,12 @@
 import * as React from 'react';
 import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import { CardActions } from '@material-ui/core';
+import { Card, CardHeader, CardContent, CardActions, Typography, IconButton } from '@material-ui/core';
+import { Close } from '@material-ui/icons';
 
 const styles = createStyles({
     card: {
         minWidth: 275,
-        maxWidth: 400,
-    },
-    title: {
-        marginBottom: 16,
-        fontSize: 14,
+        maxWidth: 500,
     },
     pos: {
         marginBottom: 12,
@@ -26,6 +20,7 @@ interface ISimpleCardProps extends WithStyles<typeof styles>{
     title?: string;
     headline?: string;
     actions?: JSX.Element;
+    onClose?: () => void;
 }
 
 class SimpleCard extends React.Component<ISimpleCardProps, {}> {
@@ -34,27 +29,40 @@ class SimpleCard extends React.Component<ISimpleCardProps, {}> {
     }
 
     render(): JSX.Element {
-        const { classes } = this.props;
+        const { classes, actions, title, onClose } = this.props;
 
-        const title = this.props.title
-            ? <Typography align="left" className={classes.title} color="textSecondary">
+        const cardTitle = title
+            ? <Typography align="left" color="textSecondary">
                 {this.props.title}
             </Typography>
             : null;
         
-        const actions = this.props.actions
+        const headerElement =
+            <CardHeader
+                action={
+                    onClose
+                        ?
+                        <IconButton onClick={e => onClose()}>
+                            <Close />
+                        </IconButton>
+                        : null
+                }
+                title={cardTitle}>
+            </CardHeader>;
+        
+        const actionsElement = actions
             ? <CardActions className={classes.action}>{this.props.actions}</CardActions>
             : null;
         
         return (
             <Card className={classes.card}>
+                {headerElement}
                 <CardContent>
-                    {title}
                     <Typography align="left" component="div">
                         {this.props.children}
                     </Typography>
                 </CardContent>
-                {actions}
+                {actionsElement}
             </Card>
         );
     }

@@ -8,7 +8,7 @@ import { Connection } from '../../Models/Connection';
 import NodeCard from "../NodeDrawer/NodeCard";
 import AddNodeCard from '../AddNode/AddNodeCard';
 import AddConnectionCard from '../AddConnection/AddConnectionCard';
-import { Add } from '@material-ui/icons';
+import MainToolbar from './MainToolbar';
 
 const styles = ({ spacing }: Theme) => createStyles({
     root: {
@@ -16,13 +16,6 @@ const styles = ({ spacing }: Theme) => createStyles({
     },
     progress: {
         margin: spacing.unit * 2,
-    },
-    flex: {
-        flexGrow: 1,
-    },
-    menuButton: {
-        marginLeft: -12,
-        marginRight: 20,
     },
 });
 
@@ -59,6 +52,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
             viewState: ViewState.Loading
         };
 
+        this.onNodeCloseClick = this.onNodeCloseClick.bind(this);
         this.onNodeAddClick = this.onNodeAddClick.bind(this);
         this.onNodeClick = this.onNodeClick.bind(this);
         this.onConnectionClick = this.onConnectionClick.bind(this);
@@ -182,6 +176,15 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         });
     }
 
+    private onNodeCloseClick(): void {
+        this.setState({
+            nodes: this.state.nodes,
+            selectedNode: new Node(),
+            selectedConnection: new Connection(),
+            viewState: ViewState.Ready
+        });
+    }
+
     renderNodeDrawer(): JSX.Element {
         const nodes = this.state.nodes;
         const { selectedNode, selectedConnection } = this.state;
@@ -205,6 +208,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                             node={selectedNode}
                             onDeleteClick={this.onNodeDeleteClick}
                             onEditClick={this.onNodeEditClick}
+                            onCloseClick={this.onNodeCloseClick}
                         />
                         : null
                     }
@@ -248,26 +252,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
 
         return (
             <div className={classes.root}>
-                <AppBar position="static">
-                    <Toolbar>
-                        <Typography
-                            align="left"
-                            variant="title"
-                            color="inherit"
-                            className={classes.flex}
-                        >
-                            Rmembr
-                        </Typography>
-                        <IconButton
-                            className={classes.menuButton}
-                            color="inherit"
-                            aria-label="Menu"
-                            onClick={this.onNodeAddClick}
-                        >
-                            <Add />
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>
+                <MainToolbar onAddClick={this.onNodeAddClick}></MainToolbar>
                 {this.renderNodeDrawer()}
             </div>
         );
