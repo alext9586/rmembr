@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AppBar, Toolbar, IconButton, Typography, CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import NodeDrawer from '../NodeDrawer/NodeDrawer';
 import Dependencies from '../../Services/Dependencies';
@@ -9,6 +9,7 @@ import NodeCard from "../NodeDrawer/NodeCard";
 import AddNodeCard from '../AddNode/AddNodeCard';
 import AddConnectionCard from '../AddConnection/AddConnectionCard';
 import MainToolbar from './MainToolbar';
+import { IConnectionPanelClickHandlers } from '../Connection/ConnectionPanel';
 
 const styles = ({ spacing }: Theme) => createStyles({
     root: {
@@ -40,6 +41,7 @@ enum ViewState {
 
 class MainContainer extends React.Component<IMainContainerProps, IMainContainerState> {
     private nodeService = Dependencies.nodeService;
+    private connectionClickHandlers: IConnectionPanelClickHandlers;
 
     constructor(props: IMainContainerProps) {
         super(props);
@@ -53,7 +55,6 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         this.onNodeCloseClick = this.onNodeCloseClick.bind(this);
         this.onNodeAddClick = this.onNodeAddClick.bind(this);
         this.onNodeClick = this.onNodeClick.bind(this);
-        this.onConnectionClick = this.onConnectionClick.bind(this);
         this.onConnectionCancelClick = this.onConnectionCancelClick.bind(this);
         this.onConnectionSaveClick = this.onConnectionSaveClick.bind(this);
         this.onNodeCancelClick = this.onNodeCancelClick.bind(this);
@@ -62,7 +63,12 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         this.onNodeSaveClick = this.onNodeSaveClick.bind(this);
         this.onNodeDeleteClick = this.onNodeDeleteClick.bind(this);
 
-        this.render();
+        this.connectionClickHandlers = {
+            add: () => { console.log("Add Connection") },
+            connection: (id: string) => { console.log("Connection Clicked", id) },
+            edit: this.onConnectionEditClick.bind(this),
+            delete: (id: string) => { console.log("Connection Delete", id) }
+        } as IConnectionPanelClickHandlers;
 
         this.nodeService.initWait().then(x => {
             this.setState({
@@ -73,7 +79,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         });
     }
 
-    private onConnectionClick(id: string): void {
+    private onConnectionEditClick(id: string): void {
         const connection = this.state.selectedNode.getConnection(id);
         this.setState({
             selectedConnection: connection,
@@ -84,7 +90,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
     private onConnectionCancelClick(): void {
         this.setState({
             selectedConnection: new Connection(),
-            viewState: ViewState.ModifyNode
+            viewState: ViewState.View
         });
     }
 
@@ -96,7 +102,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         this.setState({
             selectedNode: selectedNode,
             selectedConnection: new Connection(),
-            viewState: ViewState.ModifyNode
+            viewState: ViewState.View
         });
     }
 
@@ -192,6 +198,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                         ?
                         <NodeCard
                             node={selectedNode}
+                            connectionClickHandlers={this.connectionClickHandlers}
                             onDeleteClick={this.onNodeDeleteClick}
                             onEditClick={this.onNodeEditClick}
                             onCloseClick={this.onNodeCloseClick}
@@ -202,7 +209,6 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                         ?
                         <AddNodeCard
                             node={this.state.selectedNode}
-                            onConnectionClick={this.onConnectionClick}
                             onCancelClick={this.onNodeCancelClick}
                             onSaveClick={this.onNodeEditSaveClick}
                         />
@@ -212,7 +218,6 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                         ?
                         <AddNodeCard
                             onCancelClick={this.onNodeCancelClick}
-                            onConnectionClick={this.onConnectionClick}
                             onSaveClick={this.onNodeSaveClick}
                         />
                         : null

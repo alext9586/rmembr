@@ -1,6 +1,5 @@
 import * as React from 'react';
 import SimpleCard from '../SimpleCard/SimpleCard';
-import ConnectionsList from './ConnectionsList';
 import TitleNotesForm from '../TitleNotesForm/TitleNotesForm';
 import CancelSaveActions from '../SimpleCard/CancelSaveActions';
 import { Node } from '../../Models/Node';
@@ -11,12 +10,12 @@ interface IAddNodeCardState {
 
 interface IAddNodeCardProps {
     node?: Node;
-    onConnectionClick: (connectionId: String) => void;
     onCancelClick: () => void;
     onSaveClick: (node: Node) => void;
 }
 
 export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAddNodeCardState> {
+
     constructor(props: IAddNodeCardProps) {
         super(props);
 
@@ -26,8 +25,6 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
 
         this.onTitleBlur = this.onTitleBlur.bind(this);
         this.onNotesBlur = this.onNotesBlur.bind(this);
-        this.handleConnectionDelete = this.handleConnectionDelete.bind(this);
-        this.handleSaveClick = this.handleSaveClick.bind(this);
     }
 
     private onTitleBlur(event: any): void {
@@ -52,17 +49,13 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
         );
     }
 
-    private handleConnectionDelete(id: string): void {
-        console.log(id);
-    }
-
     private handleSaveClick(): void {
         const node = this.state.node;
         this.props.onSaveClick(node);
     }
 
     render(): JSX.Element {
-        const { onConnectionClick, onCancelClick } = this.props;
+        const { onCancelClick } = this.props;
         const actions = (
             <CancelSaveActions
                 onCancelClick={onCancelClick}
@@ -85,12 +78,7 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
                     notes={node.notes}
                     onTitleBlur={this.onTitleBlur}
                     onNotesBlur={this.onNotesBlur}
-                />
-                <ConnectionsList
-                    connections={connections}
-                    onClick={onConnectionClick}
-                    onDeleteClick={this.handleConnectionDelete}
-                />
+                />                
             </SimpleCard>
         );
     }
