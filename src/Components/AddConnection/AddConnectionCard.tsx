@@ -1,15 +1,18 @@
 import * as React from 'react';
 import SimpleCard from '../SimpleCard/SimpleCard';
-import TitleNotesForm from '../TitleNotesForm/TitleNotesForm';
 import CancelSaveActions from '../SimpleCard/CancelSaveActions';
+import NodeSelectionList from './NodeSelectionList';
 import { Connection } from '../../Models/Connection';
+import { Node } from '../../Models/Node';
 
 interface IAddConnectionCardState {
     connection: Connection;
 }
 
 interface IAddConnectionCardProps {
-    connection?: Connection;
+    connection: Connection;
+    nodes: Node[];
+    selectedNode: Node;
     onCancelClick: () => void;
     onSaveClick: (connection: Connection) => void;
 }
@@ -19,34 +22,21 @@ export default class AddConnectionCard extends React.Component<IAddConnectionCar
         super(props);
 
         this.state = {
-            connection: this.props.connection || new Connection()
+            connection: this.props.connection
         };
 
-        this.onTitleBlur = this.onTitleBlur.bind(this);
-        this.onNotesBlur = this.onNotesBlur.bind(this);
+        this.handleNodeSelect = this.handleNodeSelect.bind(this);
         this.handleSaveClick = this.handleSaveClick.bind(this);
     }
 
-    private onTitleBlur(event: any): void {
+    private handleNodeSelect(id: string, title: string): void {
         var connection = this.state.connection;
-        connection.title = event.target.value;
+        connection.title = title;
+        connection.nextId = id;
 
-        this.setState(
-            {
-                connection: connection
-            }
-        );
-    }
-
-    private onNotesBlur(event: any): void {
-        var connection = this.state.connection;
-        connection.notes = event.target.value;
-
-        this.setState(
-            {
-                connection: connection
-            }
-        );
+        this.setState({
+            connection: connection
+        });
     }
 
     private handleSaveClick(): void {
@@ -55,7 +45,7 @@ export default class AddConnectionCard extends React.Component<IAddConnectionCar
     }
 
     render(): JSX.Element {
-        const { onCancelClick } = this.props;
+        const { nodes, selectedNode, onCancelClick } = this.props;
         const { title, notes } = this.state.connection;
         const actions = (
             <CancelSaveActions
@@ -71,12 +61,10 @@ export default class AddConnectionCard extends React.Component<IAddConnectionCar
                 title={cardTitle}
                 actions={actions}
                 onClose={onCancelClick}>
-                <TitleNotesForm
-                    title={title}
-                    notes={notes}
-                    onTitleBlur={this.onTitleBlur}
-                    onNotesBlur={this.onNotesBlur}
-                />
+                <NodeSelectionList
+                    nodes={nodes}
+                    selectedNode={selectedNode}
+                    onChange={this.handleNodeSelect} />
             </SimpleCard>
         );
     }

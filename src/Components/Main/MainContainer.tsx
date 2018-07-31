@@ -226,6 +226,8 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                         ?
                         <AddConnectionCard
                             connection={selectedConnection}
+                            nodes={nodes}
+                            selectedNode={selectedNode}
                             onCancelClick={this.onConnectionCancelClick}
                             onSaveClick={this.onConnectionSaveClick}
                         ></AddConnectionCard>

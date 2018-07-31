@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { Node } from '../../Models/Node';
 
 const styles = ({ spacing }: Theme) => createStyles({
     container: {
