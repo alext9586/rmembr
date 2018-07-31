@@ -21,7 +21,7 @@ export default class NodeSelectionList extends React.Component<INodeSelectionLis
     }
 
     render(): JSX.Element {
-        const { nodes, selectedNode, onChange } = this.props;
+        const { nodes, selectedNode } = this.props;
 
         const options = nodes
             .filter(n1 => n1._id !== selectedNode._id)

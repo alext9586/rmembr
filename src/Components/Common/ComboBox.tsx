@@ -1,23 +1,14 @@
 import * as React from 'react';
 import { withStyles, createStyles, Theme, WithStyles, } from '@material-ui/core/styles';
-import { emphasize } from '@material-ui/core/styles/colorManipulator';
 import NoSsr from '@material-ui/core/NoSsr';
 import Select from 'react-select' ;
 import { Option, Options, OnChangeHandler } from 'react-select';
-
-const styles = theme => ({
-    root: {
-        flexGrow: 1,
-        height: 250,
-    },
-});
-
 
 interface IComboBoxState {
     selectedOption: Option<string>;
 }
 
-interface IComboBoxProps extends WithStyles<typeof styles> {
+interface IComboBoxProps {
     options: Options<string>;
     selectedOption: Option<string>;
     placeholder?: string;
@@ -25,7 +16,7 @@ interface IComboBoxProps extends WithStyles<typeof styles> {
     onChange: (value: Option<string>) => void;
 }
 
-class ComboBox extends React.Component<IComboBoxProps, IComboBoxState> {
+export default class ComboBox extends React.Component<IComboBoxProps, IComboBoxState> {
     private handleChange: OnChangeHandler<string> = (option: Option<string>) => {
         this.setState({
             selectedOption: option
@@ -45,10 +36,10 @@ class ComboBox extends React.Component<IComboBoxProps, IComboBoxState> {
     }
 
     render(): JSX.Element {
-        const { classes, options, placeholder, disabled } = this.props;
+        const { options, placeholder, disabled } = this.props;
         
         return (
-            <div className={classes.root}>
+            <div>
                 <NoSsr>
                     <Select
                         options={options}
@@ -62,5 +53,3 @@ class ComboBox extends React.Component<IComboBoxProps, IComboBoxState> {
         );
     }
 }
-
-export default withStyles(styles)(ComboBox);

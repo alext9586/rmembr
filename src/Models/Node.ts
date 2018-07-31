@@ -36,8 +36,14 @@ export class Node {
     }
 
     getConnection(connectionId: string): Connection {
-        var found = this.connections.filter(c => c._id === connectionId);
-        return found.length > 0 ? found[0] : new Connection();
+        let found = this.connections.filter(c => c._id === connectionId);
+
+        if (found.length > 0) {
+            let connection = found[0];
+            return new Connection(connection._id, connection.nextId, connection.title, connection.notes);
+        } else {
+            return new Connection();
+        }
     }
 
     getAllConnections(): Connection[] {

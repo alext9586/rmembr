@@ -4,6 +4,7 @@ import CancelSaveActions from '../SimpleCard/CancelSaveActions';
 import NodeSelectionList from './NodeSelectionList';
 import { Connection } from '../../Models/Connection';
 import { Node } from '../../Models/Node';
+import ConnectionNotesForm from '../Forms/ConnectionNotesForm';
 
 interface IAddConnectionCardState {
     connection: Connection;
@@ -25,12 +26,22 @@ export default class AddConnectionCard extends React.Component<IAddConnectionCar
             connection: this.props.connection
         };
 
+        this.handleNotesBlur = this.handleNotesBlur.bind(this);
         this.handleNodeSelect = this.handleNodeSelect.bind(this);
         this.handleSaveClick = this.handleSaveClick.bind(this);
     }
 
+    private handleNotesBlur(event: any): void {
+        let connection = this.state.connection;
+        connection.notes = event.target.value;
+
+        this.setState({
+            connection: connection
+        });
+    }
+
     private handleNodeSelect(id: string, title: string): void {
-        var connection = this.state.connection;
+        let connection = this.state.connection;
         connection.title = title;
         connection.nextId = id;
 
@@ -40,13 +51,12 @@ export default class AddConnectionCard extends React.Component<IAddConnectionCar
     }
 
     private handleSaveClick(): void {
-        const connection = this.state.connection;
+        let connection = this.state.connection;
         this.props.onSaveClick(connection);
     }
 
     render(): JSX.Element {
         const { nodes, selectedNode, onCancelClick } = this.props;
-        const { title, notes } = this.state.connection;
         const actions = (
             <CancelSaveActions
                 onCancelClick={onCancelClick}
@@ -65,6 +75,9 @@ export default class AddConnectionCard extends React.Component<IAddConnectionCar
                     nodes={nodes}
                     selectedNode={selectedNode}
                     onChange={this.handleNodeSelect} />
+                <ConnectionNotesForm
+                    notes={this.state.connection.notes}
+                    onNotesBlur={this.handleNotesBlur} />
             </SimpleCard>
         );
     }

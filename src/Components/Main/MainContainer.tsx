@@ -80,7 +80,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
     }
 
     private onConnectionEditClick(id: string): void {
-        const connection = this.state.selectedNode.getConnection(id);
+        let connection = this.state.selectedNode.getConnection(id);
         this.setState({
             selectedConnection: connection,
             viewState: ViewState.ModifyConnection
@@ -95,7 +95,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
     }
 
     private onConnectionSaveClick(connection: Connection): void {
-        var selectedNode = this.state.selectedNode;
+        let selectedNode = this.state.selectedNode;
         selectedNode.updateConnection(connection);
         this.nodeService.updateNode(selectedNode);
 
@@ -107,7 +107,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
     }
 
     private onNodeClick(id: string): void {
-        const found = this.nodeService.getNodes().filter(n => n._id === id);
+        let found = this.nodeService.getNodes().filter(n => n._id === id);
         this.setState({
             selectedNode: found[0],
             selectedConnection: new Connection(),
@@ -124,7 +124,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
     }
 
     private onNodeCancelClick(): void {
-        const viewState = (this.state.selectedNode.isEmpty) ? ViewState.Ready : ViewState.View;
+        let viewState = (this.state.selectedNode.isEmpty) ? ViewState.Ready : ViewState.View;
 
         this.setState({
             selectedConnection: new Connection(),

@@ -1,17 +1,7 @@
 import * as React from 'react';
-import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-
-const styles = ({ spacing }: Theme) => createStyles({
-    container: {
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-    textField: {
-        marginLeft: spacing.unit,
-        marginRight: spacing.unit,
-    },
-});
+import styles from './Styles';
 
 interface ITitleNotesFormState {
     title?: string;
