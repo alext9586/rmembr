@@ -25,6 +25,7 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
 
         this.onTitleBlur = this.onTitleBlur.bind(this);
         this.onNotesBlur = this.onNotesBlur.bind(this);
+        this.handleSaveClick = this.handleSaveClick.bind(this);
     }
 
     private onTitleBlur(event: any): void {
@@ -66,7 +67,6 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
         const cardTitle = this.props.node ? "Edit Node" : "Add Node";
 
         const node = this.state.node;
-        const connections = node ? node.getAllConnections() : [];
 
         return (
             <SimpleCard
