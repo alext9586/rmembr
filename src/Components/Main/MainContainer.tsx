@@ -5,9 +5,10 @@ import NodeDrawer from '../NodeDrawer/NodeDrawer';
 import Dependencies from '../../Services/Dependencies';
 import { Node } from "../../Models/Node";
 import { Connection } from '../../Models/Connection';
+import { PanelModifyState } from '../../Models/PanelModifyState';
 import NodeCard from "../NodeDrawer/NodeCard";
-import AddNodeCard from '../AddNode/AddNodeCard';
-import AddConnectionCard from '../AddConnection/AddConnectionCard';
+import NodePanel from './NodePanel';
+import ConnectionPanel from './ConnectionPanel';
 import MainToolbar from './MainToolbar';
 import { IConnectionPanelClickHandlers } from '../Connection/ConnectionPanel';
 
@@ -34,10 +35,10 @@ enum ViewState {
     Loading,
     Ready,
     View,
-    Add,
-    ModifyNode,
+    AddNode,
+    EditNode,
     AddConnection,
-    ModifyConnection
+    EditConnection
 }
 
 class MainContainer extends React.Component<IMainContainerProps, IMainContainerState> {
@@ -58,13 +59,11 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         this.onNodeClick = this.onNodeClick.bind(this);
         this.onNodeCancelClick = this.onNodeCancelClick.bind(this);
         this.onNodeEditClick = this.onNodeEditClick.bind(this);
-        this.onNodeEditSaveClick = this.onNodeEditSaveClick.bind(this);
         this.onNodeSaveClick = this.onNodeSaveClick.bind(this);
         this.onNodeDeleteClick = this.onNodeDeleteClick.bind(this);
 
         this.onConnectionCancelClick = this.onConnectionCancelClick.bind(this);
         this.onConnectionSaveClick = this.onConnectionSaveClick.bind(this);
-        this.onConnectionAddSaveClick = this.onConnectionAddSaveClick.bind(this);
 
         this.connectionClickHandlers = {
             add: this.onConnectionAddClick.bind(this),
@@ -108,7 +107,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         let connection = this.state.selectedNode.getConnection(id);
         this.setState({
             selectedConnection: connection,
-            viewState: ViewState.ModifyConnection
+            viewState: ViewState.EditConnection
         });
     }
 
@@ -131,28 +130,12 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         });
     }
 
-    private onConnectionSaveClick(connection: Connection): void {
-        let selectedNode = this.state.selectedNode;
-        selectedNode.updateConnection(connection);
-        this.nodeService.updateNode(selectedNode);
-
+    private onConnectionSaveClick(node: Node): void {
         this.setState({
-            selectedNode: selectedNode,
+            selectedNode: node,
             selectedConnection: new Connection(),
             viewState: ViewState.View
-        });
-    }
-
-    private onConnectionAddSaveClick(connection: Connection): void {
-        let selectedNode = this.state.selectedNode;
-        selectedNode.addConnection(connection);
-        this.nodeService.updateNode(selectedNode);
-
-        this.setState({
-            selectedNode: selectedNode,
-            selectedConnection: new Connection(),
-            viewState: ViewState.View
-        });
+        })
     }
 
     private onNodeClick(id: string): void {
@@ -164,7 +147,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         this.setState({
             selectedNode: new Node(),
             selectedConnection: new Connection(),
-            viewState: ViewState.Add
+            viewState: ViewState.AddNode
         });
     }
 
@@ -190,23 +173,11 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         this.setState({
             selectedNode: node,
             selectedConnection: new Connection(),
-            viewState: ViewState.ModifyNode
-        });
-    }
-
-    private onNodeEditSaveClick(node: Node): void {
-        this.nodeService.updateNode(node);
-
-        this.setState({
-            selectedNode: node,
-            selectedConnection: new Connection(),
-            viewState: ViewState.View
+            viewState: ViewState.EditNode
         });
     }
 
     private onNodeSaveClick(node: Node): void {
-        this.nodeService.addNode(node);
-
         this.setState({
             selectedNode: node,
             selectedConnection: new Connection(),
@@ -228,9 +199,9 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         const { classes } = this.props;
 
         const showViewState = this.state.viewState === ViewState.View;
-        const showModifyNodeState = this.state.viewState === ViewState.ModifyNode;
-        const showModifyConnectionState = this.state.viewState === ViewState.ModifyConnection;
-        const showAddState = this.state.viewState === ViewState.Add;
+        const showEditNodeState = this.state.viewState === ViewState.EditNode;
+        const showEditConnectionState = this.state.viewState === ViewState.EditConnection;
+        const showAddNodeState = this.state.viewState === ViewState.AddNode;
         const showAddConnectionState = this.state.viewState === ViewState.AddConnection;
 
         if (nodes.length > 0) {
@@ -251,42 +222,32 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                         />
                         : null
                     }
-                    {showModifyNodeState
+                    {showEditNodeState || showAddNodeState
                         ?
-                        <AddNodeCard
-                            node={this.state.selectedNode}
-                            onCancelClick={this.onNodeCancelClick}
-                            onSaveClick={this.onNodeEditSaveClick}
-                        />
-                        : null
-                    }
-                    {showAddState
-                        ?
-                        <AddNodeCard
-                            onCancelClick={this.onNodeCancelClick}
+                        <NodePanel
+                            displayState={showAddNodeState
+                                ? PanelModifyState.Add
+                                : PanelModifyState.Edit}
+                            nodeService={this.nodeService}
+                            selectedNode={selectedNode}
+                            selectedConnection={selectedConnection}
                             onSaveClick={this.onNodeSaveClick}
-                        />
+                            onCancelClick={this.onNodeCancelClick}
+                        ></NodePanel>
                         : null
                     }
-                    {showModifyConnectionState
+                    {showEditConnectionState || showAddConnectionState
                         ?
-                        <AddConnectionCard
-                            connection={selectedConnection}
-                            nodes={nodes}
-                            selectedNode={selectedNode}
-                            onCancelClick={this.onConnectionCancelClick}
+                        <ConnectionPanel
+                            displayState={showAddConnectionState
+                                ? PanelModifyState.Add
+                                : PanelModifyState.Edit}
+                            nodeService={this.nodeService}
+                            selectedNode={this.state.selectedNode}
+                            selectedConnection={this.state.selectedConnection}
                             onSaveClick={this.onConnectionSaveClick}
-                        ></AddConnectionCard>
-                        : null
-                    }
-                    {showAddConnectionState
-                        ?
-                        <AddConnectionCard
-                            nodes={nodes}
-                            selectedNode={selectedNode}
                             onCancelClick={this.onConnectionCancelClick}
-                            onSaveClick={this.onConnectionAddSaveClick}
-                        ></AddConnectionCard>
+                        ></ConnectionPanel>
                         : null
                     }
                 </NodeDrawer>
