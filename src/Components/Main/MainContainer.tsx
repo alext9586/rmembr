@@ -36,6 +36,7 @@ enum ViewState {
     View,
     Add,
     ModifyNode,
+    AddConnection,
     ModifyConnection
 }
 
@@ -63,10 +64,11 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
 
         this.onConnectionCancelClick = this.onConnectionCancelClick.bind(this);
         this.onConnectionSaveClick = this.onConnectionSaveClick.bind(this);
+        this.onConnectionAddSaveClick = this.onConnectionAddSaveClick.bind(this);
 
         this.connectionClickHandlers = {
-            add: () => { console.log("Add Connection") },
-            connection: (id: string) => { console.log("Connection Clicked", id) },
+            add: this.onConnectionAddClick.bind(this),
+            connection: this.onConnectionGoToNodeClick.bind(this),
             edit: this.onConnectionEditClick.bind(this),
             delete: this.onConnectionDeleteClick.bind(this)
         } as IConnectionPanelClickHandlers;
@@ -78,6 +80,28 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                 viewState: ViewState.Ready
             });
         });
+    }
+
+    private viewNode(selectedNode: Node): void {
+        this.setState({
+            selectedNode: selectedNode,
+            selectedConnection: new Connection(),
+            viewState: ViewState.View
+        });
+    }
+
+    private onConnectionAddClick(): void {
+        this.setState({
+            selectedConnection: new Connection(),
+            viewState: ViewState.AddConnection
+        });
+    }
+
+    private onConnectionGoToNodeClick(id: string): void {
+        let selectedConnection = this.state.selectedNode.getConnection(id);
+        let selectedNodeId = selectedConnection.nextId;
+        let selectedNode = this.nodeService.getNode(selectedNodeId);
+        this.viewNode(selectedNode);
     }
 
     private onConnectionEditClick(id: string): void {
@@ -119,13 +143,21 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         });
     }
 
-    private onNodeClick(id: string): void {
-        let found = this.nodeService.getNodes().filter(n => n._id === id);
+    private onConnectionAddSaveClick(connection: Connection): void {
+        let selectedNode = this.state.selectedNode;
+        selectedNode.addConnection(connection);
+        this.nodeService.updateNode(selectedNode);
+
         this.setState({
-            selectedNode: found[0],
+            selectedNode: selectedNode,
             selectedConnection: new Connection(),
             viewState: ViewState.View
         });
+    }
+
+    private onNodeClick(id: string): void {
+        let found = this.nodeService.getNodes().filter(n => n._id === id);
+        this.viewNode(found[0]);
     }
 
     private onNodeAddClick(): void {
@@ -199,6 +231,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         const showModifyNodeState = this.state.viewState === ViewState.ModifyNode;
         const showModifyConnectionState = this.state.viewState === ViewState.ModifyConnection;
         const showAddState = this.state.viewState === ViewState.Add;
+        const showAddConnectionState = this.state.viewState === ViewState.AddConnection;
 
         if (nodes.length > 0) {
             return (
@@ -243,6 +276,16 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                             selectedNode={selectedNode}
                             onCancelClick={this.onConnectionCancelClick}
                             onSaveClick={this.onConnectionSaveClick}
+                        ></AddConnectionCard>
+                        : null
+                    }
+                    {showAddConnectionState
+                        ?
+                        <AddConnectionCard
+                            nodes={nodes}
+                            selectedNode={selectedNode}
+                            onCancelClick={this.onConnectionCancelClick}
+                            onSaveClick={this.onConnectionAddSaveClick}
                         ></AddConnectionCard>
                         : null
                     }

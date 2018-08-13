@@ -11,7 +11,7 @@ interface IAddConnectionCardState {
 }
 
 interface IAddConnectionCardProps {
-    connection: Connection;
+    connection?: Connection;
     nodes: Node[];
     selectedNode: Node;
     onCancelClick: () => void;
@@ -23,7 +23,7 @@ export default class AddConnectionCard extends React.Component<IAddConnectionCar
         super(props);
 
         this.state = {
-            connection: this.props.connection
+            connection: this.props.connection || new Connection()
         };
 
         this.handleNotesBlur = this.handleNotesBlur.bind(this);
