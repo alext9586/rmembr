@@ -55,19 +55,20 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         this.onNodeCloseClick = this.onNodeCloseClick.bind(this);
         this.onNodeAddClick = this.onNodeAddClick.bind(this);
         this.onNodeClick = this.onNodeClick.bind(this);
-        this.onConnectionCancelClick = this.onConnectionCancelClick.bind(this);
-        this.onConnectionSaveClick = this.onConnectionSaveClick.bind(this);
         this.onNodeCancelClick = this.onNodeCancelClick.bind(this);
         this.onNodeEditClick = this.onNodeEditClick.bind(this);
         this.onNodeEditSaveClick = this.onNodeEditSaveClick.bind(this);
         this.onNodeSaveClick = this.onNodeSaveClick.bind(this);
         this.onNodeDeleteClick = this.onNodeDeleteClick.bind(this);
 
+        this.onConnectionCancelClick = this.onConnectionCancelClick.bind(this);
+        this.onConnectionSaveClick = this.onConnectionSaveClick.bind(this);
+
         this.connectionClickHandlers = {
             add: () => { console.log("Add Connection") },
             connection: (id: string) => { console.log("Connection Clicked", id) },
             edit: this.onConnectionEditClick.bind(this),
-            delete: (id: string) => { console.log("Connection Delete", id) }
+            delete: this.onConnectionDeleteClick.bind(this)
         } as IConnectionPanelClickHandlers;
 
         this.nodeService.initWait().then(x => {
@@ -84,6 +85,18 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         this.setState({
             selectedConnection: connection,
             viewState: ViewState.ModifyConnection
+        });
+    }
+
+    private onConnectionDeleteClick(id: string): void {
+        let selectedNode = this.state.selectedNode;
+        selectedNode.removeConnection(id);
+        this.nodeService.updateNode(selectedNode);
+
+        this.setState({
+            selectedNode: selectedNode,
+            selectedConnection: new Connection(),
+            viewState: ViewState.View
         });
     }
 
