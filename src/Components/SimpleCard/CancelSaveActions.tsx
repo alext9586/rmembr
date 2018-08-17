@@ -15,11 +15,12 @@ const styles = ({ spacing }: Theme) => createStyles({
 interface ICancelSaveActionsProps extends WithStyles<typeof styles> {
     onCancelClick: (event: any) => void;
     onSaveClick: (event: any) => void;
+    saveDisabled: boolean;
 }
 
 class CancelSaveActions extends React.Component<ICancelSaveActionsProps, {}> {
     render(): JSX.Element {
-        const { classes, onCancelClick, onSaveClick } = this.props;
+        const { classes, onCancelClick, onSaveClick, saveDisabled } = this.props;
 
         return (
             <Typography align="right">
@@ -33,6 +34,7 @@ class CancelSaveActions extends React.Component<ICancelSaveActionsProps, {}> {
                     color="primary"
                     className={classes.button}
                     onClick={onSaveClick}
+                    disabled={saveDisabled}
                     aria-label="Save"><Check /></Button>
             </Typography>
         );

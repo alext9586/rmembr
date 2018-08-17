@@ -57,10 +57,13 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
 
     render(): JSX.Element {
         const { onCancelClick } = this.props;
+        const disableSave = this.state.node.title === "";
+
         const actions = (
             <CancelSaveActions
                 onCancelClick={onCancelClick}
-                onSaveClick={this.handleSaveClick} />
+                onSaveClick={this.handleSaveClick}
+                saveDisabled={disableSave}/>
         );
 
         // Check if it was even passed in

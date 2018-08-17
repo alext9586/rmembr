@@ -88,7 +88,8 @@ export default class AddConnectionCard extends React.Component<IAddConnectionCar
         const actions = (
             <CancelSaveActions
                 onCancelClick={onCancelClick}
-                onSaveClick={this.handleSaveClick} />
+                onSaveClick={this.handleSaveClick}
+                saveDisabled={this.state.selectedNode.isEmpty} />
         );
 
         // Check if it was even passed in
