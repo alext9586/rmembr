@@ -4,7 +4,7 @@ import { CircularProgress } from '@material-ui/core';
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import NodeDrawer from '../NodeDrawer/NodeDrawer';
 import Dependencies from '../../Services/Dependencies';
-import NodeCard from "../NodeDrawer/NodeCard";
+import NodeViewPanel from './NodeViewPanel';
 import NodePanel from './NodePanel';
 import ConnectionPanel from './ConnectionPanel';
 import MainToolbar from './MainToolbar';
@@ -158,8 +158,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         });
     }
 
-    private onNodeDeleteClick(node: Node): void {
-        this.nodeService.deleteNode(node._id);
+    private onNodeDeleteClick(): void {
         this.setState({
             selectedNode: new Node(),
             selectedConnection: new Connection(),
@@ -211,8 +210,9 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                 >
                     {showViewState
                         ?
-                        <NodeCard
-                            node={selectedNode}
+                        <NodeViewPanel
+                            nodeService={this.nodeService}
+                            selectedNode={selectedNode}
                             connectionClickHandlers={this.connectionClickHandlers}
                             onDeleteClick={this.onNodeDeleteClick}
                             onEditClick={this.onNodeEditClick}

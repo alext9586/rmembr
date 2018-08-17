@@ -54,6 +54,10 @@ export class Node {
         this.connections = this.connections.filter(c => c._id !== connectionId);
     }
 
+    removeConnectionToNode(nodeId: string): void {
+        this.connections = this.connections.filter(c => c.nextId !== nodeId);
+    }
+
     update(newNode: Node): void {
         this.title = newNode.title;
         this.notes = newNode.notes;

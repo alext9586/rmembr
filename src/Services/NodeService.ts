@@ -54,6 +54,7 @@ export class NodeService implements INodeService {
 
         if (found) {
             this.nodes = this.nodes.filter(n => n._id !== id);
+            this.nodes.forEach(n => n.removeConnectionToNode(id));
         }
 
         return found;
