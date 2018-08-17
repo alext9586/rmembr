@@ -5,7 +5,6 @@ import { Option } from 'react-select';
 
 interface INodeSelectionListProps {
     nodes: Node[];
-    excludeNode: Node;
     selectedNode: Node;
     onChange: (id: string, title: string) => void;
 }
@@ -24,14 +23,13 @@ export default class NodeSelectionList extends React.Component<INodeSelectionLis
     }
 
     render(): JSX.Element {
-        const { nodes, excludeNode, selectedNode } = this.props;
+        const { nodes, selectedNode } = this.props;
 
         const options = nodes
-            .filter(n1 => n1._id !== excludeNode._id)
-            .map(n2 => {
+            .map(node => {
                 return {
-                    label: n2.title,
-                    value: n2._id
+                    label: node.title,
+                    value: node._id
                 } as Option<string>
             });
 

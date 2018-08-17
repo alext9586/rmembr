@@ -21,6 +21,7 @@ interface IAddConnectionCardProps {
 
 export default class AddConnectionCard extends React.Component<IAddConnectionCardProps, IAddConnectionCardState> {
     private emptyNode = new Node();
+    private selectableNodes: Node[];
 
     private get isEditMode(): boolean {
         return this.props.mode == PanelModifyState.Edit;
@@ -37,6 +38,9 @@ export default class AddConnectionCard extends React.Component<IAddConnectionCar
             connection: this.props.connection || new Connection(),
             selectedNode: selectedNode
         };
+
+        this.selectableNodes = this.props.nodes
+            .filter(node => node._id !== this.props.parentNode._id);
 
         this.handleNotesBlur = this.handleNotesBlur.bind(this);
         this.handleNodeSelect = this.handleNodeSelect.bind(this);
@@ -78,7 +82,7 @@ export default class AddConnectionCard extends React.Component<IAddConnectionCar
     }
 
     render(): JSX.Element {
-        const { nodes, parentNode, onCancelClick } = this.props;
+        const { onCancelClick } = this.props;
         const { selectedNode, connection } = this.state;
 
         const actions = (
@@ -96,8 +100,7 @@ export default class AddConnectionCard extends React.Component<IAddConnectionCar
                 actions={actions}
                 onClose={onCancelClick}>
                 <NodeSelectionList
-                    nodes={nodes}
-                    excludeNode={parentNode}
+                    nodes={this.selectableNodes}
                     selectedNode={selectedNode}
                     onChange={this.handleNodeSelect} />
                 <ConnectionNotesForm
