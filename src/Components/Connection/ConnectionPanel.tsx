@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { Connection } from "../../Models";
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
-import { Connection } from '../../Models/Connection';
-import { Button, Toolbar, Typography, IconButton } from '@material-ui/core';
+import { Toolbar, Typography, IconButton } from '@material-ui/core';
 import { IConnectionRowClickHandlers } from './ConnectionRow';
 import ConnectionList from './ConnectionList';
 import AddIcon from '@material-ui/icons/Add';

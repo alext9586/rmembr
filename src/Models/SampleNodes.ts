@@ -1,5 +1,4 @@
-import { Node } from './Node';
-import { Connection } from './Connection';
+import { Node, Connection } from './index';
 
 export class SampleNodes {
     public static create(repeat: number = 1): Node[] {

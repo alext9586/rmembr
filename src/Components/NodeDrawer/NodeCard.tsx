@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { Node } from "../../Models";
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import { Button, Typography } from '@material-ui/core';
-import { Node } from "../../Models/Node";
 import SimpleCard from '../SimpleCard/SimpleCard';
 import { Edit, Delete } from '@material-ui/icons';
 import ConnectionPanel from '../Connection/ConnectionPanel';

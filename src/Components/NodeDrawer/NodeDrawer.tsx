@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { Node } from "../../Models";
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import NodeList from './NodeList';
-import { Node } from "../../Models/Node";
 
 const drawerWidth = 240;
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Connection } from '../../Models/Connection';
+import { Connection } from "../../Models";
 import List from '@material-ui/core/List';
 import ConnectionRow from './ConnectionRow';
 import { IConnectionRowClickHandlers } from './ConnectionRow';

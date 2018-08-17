@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { Node } from "../../Models/Node";
-import { Connection } from '../../Models/Connection';
-import { PanelModifyState } from '../../Models/PanelModifyState';
+import { Node, Connection, PanelModifyState } from "../../Models";
 import { IMainPanelProps } from './IMainPanelProps';
 import AddConnectionCard from '../AddConnection/AddConnectionCard';
 
@@ -43,8 +41,9 @@ export default class AddConnectionPanel extends React.Component<IMainPanelProps,
                 {showAddState
                     ?
                     <AddConnectionCard
+                        mode={PanelModifyState.Add}
                         nodes={nodes}
-                        selectedNode={selectedNode}
+                        parentNode={selectedNode}
                         onCancelClick={onCancelClick}
                         onSaveClick={this.onAddSaveClick}
                     ></AddConnectionCard>
@@ -53,14 +52,15 @@ export default class AddConnectionPanel extends React.Component<IMainPanelProps,
                 {showEditState
                     ?
                     <AddConnectionCard
+                        mode={PanelModifyState.Edit}
                         connection={selectedConnection}
                         nodes={nodes}
-                        selectedNode={selectedNode}
+                        parentNode={selectedNode}
                         onCancelClick={onCancelClick}
                         onSaveClick={this.onEditSaveClick}
                     ></AddConnectionCard>
                     : null
-                    }
+                }
             </div>
         );
     }

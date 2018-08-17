@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { Node } from "../../Models";
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Node } from "../../Models/Node";
 
 const styles = ({ palette }: Theme) => createStyles({
     root: {

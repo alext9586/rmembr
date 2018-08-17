@@ -1,10 +1,11 @@
 import * as React from 'react';
+import { Node } from "../../Models";
 import ComboBox from '../Common/ComboBox';
-import { Node } from '../../Models/Node';
 import { Option } from 'react-select';
 
 interface INodeSelectionListProps {
     nodes: Node[];
+    excludeNode: Node;
     selectedNode: Node;
     onChange: (id: string, title: string) => void;
 }
@@ -17,14 +18,16 @@ export default class NodeSelectionList extends React.Component<INodeSelectionLis
     }
 
     private handleChange(option: Option): void {
-        this.props.onChange(`${option.value}`, `${option.label}`);
+        if (option.value !== "") {
+            this.props.onChange(`${option.value}`, `${option.label}`);
+        }
     }
 
     render(): JSX.Element {
-        const { nodes, selectedNode } = this.props;
+        const { nodes, excludeNode, selectedNode } = this.props;
 
         const options = nodes
-            .filter(n1 => n1._id !== selectedNode._id)
+            .filter(n1 => n1._id !== excludeNode._id)
             .map(n2 => {
                 return {
                     label: n2.title,
@@ -33,8 +36,8 @@ export default class NodeSelectionList extends React.Component<INodeSelectionLis
             });
 
         const selectedOption = {
-            label: selectedNode.title,
-            value: selectedNode._id
+            label: selectedNode.isEmpty ? "Select a node" : selectedNode.title,
+            value: selectedNode.isEmpty ? "" : selectedNode._id
         } as Option<string>;
 
         return (

@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { Node } from "../../Models";
 import SimpleCard from '../SimpleCard/SimpleCard';
 import TitleNotesForm from '../Forms/TitleNotesForm';
 import CancelSaveActions from '../SimpleCard/CancelSaveActions';
-import { Node } from '../../Models/Node';
 
 interface IAddNodeCardState {
     node: Node;

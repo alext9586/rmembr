@@ -1,7 +1,5 @@
 import { INodeService } from '../../Services/NodeService';
-import { Node } from "../../Models/Node";
-import { Connection } from '../../Models/Connection';
-import { PanelModifyState } from '../../Models/PanelModifyState';
+import { Node, Connection, PanelModifyState } from "../../Models";
 
 export interface IMainPanelProps {
     displayState: PanelModifyState,

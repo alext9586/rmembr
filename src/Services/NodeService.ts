@@ -1,4 +1,4 @@
-import { Node } from "../Models/Node";
+import { Node } from "../Models";
 import { IDbService, DbService } from "./DbService";
 import { MockDataService } from "./MockDataService";
 

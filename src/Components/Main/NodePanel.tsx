@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Node } from "../../Models/Node";
-import { PanelModifyState } from '../../Models/PanelModifyState';
+import { Node, PanelModifyState } from "../../Models";
 import { IMainPanelProps } from './IMainPanelProps';
 import AddNodeCard from '../AddNode/AddNodeCard';
 
@@ -23,8 +22,7 @@ export default class NodePanel extends React.Component<IMainPanelProps, {}> {
     }
 
     render(): JSX.Element {
-        const { displayState, nodeService, selectedNode, selectedConnection, onCancelClick } = this.props;
-        const nodes = nodeService.getNodes();
+        const { displayState, selectedNode, onCancelClick } = this.props;
 
         const showAddState = displayState === PanelModifyState.Add;
         const showEditState = displayState === PanelModifyState.Edit;

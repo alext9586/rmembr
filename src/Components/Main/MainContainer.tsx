@@ -1,11 +1,9 @@
 import * as React from 'react';
+import { Node, Connection, PanelModifyState } from "../../Models";
 import { CircularProgress } from '@material-ui/core';
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
 import NodeDrawer from '../NodeDrawer/NodeDrawer';
 import Dependencies from '../../Services/Dependencies';
-import { Node } from "../../Models/Node";
-import { Connection } from '../../Models/Connection';
-import { PanelModifyState } from '../../Models/PanelModifyState';
 import NodeCard from "../NodeDrawer/NodeCard";
 import NodePanel from './NodePanel';
 import ConnectionPanel from './ConnectionPanel';

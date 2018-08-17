@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { Connection } from "../../Models";
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
-import { Connection } from '../../Models/Connection';
 import { ListItemSecondaryAction, IconButton } from '@material-ui/core';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
