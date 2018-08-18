@@ -6,6 +6,8 @@ import SimpleCard from '../SimpleCard/SimpleCard';
 import { Edit, Delete } from '@material-ui/icons';
 import ConnectionPanel from '../Connection/ConnectionPanel';
 import { IConnectionPanelClickHandlers } from '../Connection/ConnectionPanel';
+import DeleteConfirmationDialog from '../Common/DeleteConfirmationDialog';
+import { INodeService } from '../../Services/NodeService';
 
 const styles = ({ spacing }: Theme) => createStyles({
     button: {
@@ -17,24 +19,54 @@ const styles = ({ spacing }: Theme) => createStyles({
 });
 
 interface INodeCardProps extends WithStyles<typeof styles> {
+    nodeService: INodeService;
     node: Node;
     connectionClickHandlers: IConnectionPanelClickHandlers;
-    onDeleteClick: (node: Node) => void;
+    onDeleteClick: () => void;
     onEditClick: (node: Node) => void;
     onCloseClick: () => void;
 }
 
-class NodeCard extends React.Component<INodeCardProps, {}> {
+interface INodeCardState {
+    warnDialogOpen: boolean;
+}
+
+class NodeCard extends React.Component<INodeCardProps, INodeCardState> {
     constructor(props: INodeCardProps) {
         super(props);
 
-        this.handleDeleteClick = this.handleDeleteClick.bind(this);
+        this.state = {
+            warnDialogOpen: false
+        }
+
+        this.handleDeleteWarn = this.handleDeleteWarn.bind(this);
+        this.handleDeleteWarnClose = this.handleDeleteWarnClose.bind(this);
+        this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
+
+        // this.handleDeleteClick = this.handleDeleteClick.bind(this);
         this.handleEditClick = this.handleEditClick.bind(this);
     }
 
-    private handleDeleteClick(event: any): void {
-        this.props.onDeleteClick(this.props.node);
+    private handleDeleteWarn(event: any): void {
+        this.setState({
+            warnDialogOpen: true
+        });
     }
+
+    private handleDeleteWarnClose(): void {
+        this.setState({
+            warnDialogOpen: false
+        })
+    }
+
+    private handleDeleteConfirm(): void {
+        this.props.nodeService.deleteNode(this.props.node._id);
+        this.props.onDeleteClick();
+    }
+
+    // private handleDeleteClick(event: any): void {
+    //     this.props.onDeleteClick(this.props.node);
+    // }
 
     private handleEditClick(event: any): void {
         this.props.onEditClick(this.props.node);
@@ -49,7 +81,7 @@ class NodeCard extends React.Component<INodeCardProps, {}> {
                     variant="fab"
                     color="secondary"
                     className={classes.button}
-                    onClick={this.handleDeleteClick}
+                    onClick={this.handleDeleteWarn}
                     aria-label="Delete"><Delete /></Button>
                 <Button
                     variant="fab"
@@ -67,6 +99,7 @@ class NodeCard extends React.Component<INodeCardProps, {}> {
         const actions = this.renderActions();
 
         return (
+            <div>
             <SimpleCard
                 title={node.title}
                 actions={actions}
@@ -77,6 +110,14 @@ class NodeCard extends React.Component<INodeCardProps, {}> {
                     onClickHandlers={connectionClickHandlers}
                 />
             </SimpleCard>
+            <DeleteConfirmationDialog
+                open={this.state.warnDialogOpen}
+                onClose={this.handleDeleteWarnClose}
+                onDelete={this.handleDeleteConfirm}
+                title="Delete Node?"
+                body="Are you sure you want to delete this node?"
+                />
+            </div>
         )
     }
 }
