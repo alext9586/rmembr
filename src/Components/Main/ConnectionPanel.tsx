@@ -3,7 +3,7 @@ import { Node, Connection, PanelModifyState } from "../../Models";
 import { IMainPanelProps } from './IMainPanelProps';
 import AddConnectionCard from '../AddConnection/AddConnectionCard';
 
-export default class AddConnectionPanel extends React.Component<IMainPanelProps, {}> {
+export default class ConnectionPanel extends React.Component<IMainPanelProps, {}> {
 
     constructor(props: IMainPanelProps) {
         super(props);
