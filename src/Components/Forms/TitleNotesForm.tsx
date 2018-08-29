@@ -11,6 +11,7 @@ interface ITitleNotesFormState {
 interface ITitleNotesFormProps extends WithStyles<typeof styles> {
     title: string;
     notes: string;
+    onTitleChange: (title: string) => void;
     onTitleBlur: (event: any) => void;
     onNotesBlur: (event: any) => void;
 }
@@ -31,6 +32,8 @@ class TitleNotesForm extends React.Component<ITitleNotesFormProps, ITitleNotesFo
     private handleTitleChange(event: React.ChangeEvent<HTMLInputElement>): void {
         this.setState({
             title: event.target.value
+        }, () => {
+            this.props.onTitleChange(this.state.title || "")
         });
     }
 

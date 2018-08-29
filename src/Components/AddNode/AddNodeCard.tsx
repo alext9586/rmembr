@@ -6,6 +6,7 @@ import CancelSaveActions from '../SimpleCard/CancelSaveActions';
 
 interface IAddNodeCardState {
     node: Node;
+    disableSave: boolean;
 }
 
 interface IAddNodeCardProps {
@@ -20,12 +21,20 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
         super(props);
 
         this.state = {
-            node: this.props.node || new Node()
+            node: this.props.node || new Node(),
+            disableSave: true
         };
 
+        this.onTitleChange = this.onTitleChange.bind(this);
         this.onTitleBlur = this.onTitleBlur.bind(this);
         this.onNotesBlur = this.onNotesBlur.bind(this);
         this.handleSaveClick = this.handleSaveClick.bind(this);
+    }
+
+    private onTitleChange(title: string): void {
+        this.setState({
+            disableSave: title === ""
+        })
     }
 
     private onTitleBlur(event: any): void {
@@ -57,13 +66,12 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
 
     render(): JSX.Element {
         const { onCancelClick } = this.props;
-        const disableSave = this.state.node.title === "";
 
         const actions = (
             <CancelSaveActions
                 onCancelClick={onCancelClick}
                 onSaveClick={this.handleSaveClick}
-                saveDisabled={disableSave}/>
+                saveDisabled={this.state.disableSave}/>
         );
 
         // Check if it was even passed in
@@ -79,6 +87,7 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
                 <TitleNotesForm
                     title={node.title}
                     notes={node.notes}
+                    onTitleChange={this.onTitleChange}
                     onTitleBlur={this.onTitleBlur}
                     onNotesBlur={this.onNotesBlur}
                 />                

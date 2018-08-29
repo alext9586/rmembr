@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
+import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
-import { Add } from '@material-ui/icons';
 
 const styles = ({ spacing }: Theme) => createStyles({
     flex: {
@@ -14,7 +13,6 @@ const styles = ({ spacing }: Theme) => createStyles({
 });
 
 interface IMainToolbarProps extends WithStyles<typeof styles> {
-    onAddClick: () => void;
 }
 
 class MainToolbar extends React.Component<IMainToolbarProps, {}> {
@@ -23,7 +21,7 @@ class MainToolbar extends React.Component<IMainToolbarProps, {}> {
     }
 
     render(): JSX.Element {
-        const { classes, onAddClick } = this.props;
+        const { classes } = this.props;
 
         return (
             <AppBar position="static">
@@ -35,13 +33,6 @@ class MainToolbar extends React.Component<IMainToolbarProps, {}> {
                         className={classes.flex}>
                         Rmembr
                         </Typography>
-                    <IconButton
-                        className={classes.menuButton}
-                        color="inherit"
-                        aria-label="Menu"
-                        onClick={e => onAddClick()}>
-                        <Add />
-                    </IconButton>
                 </Toolbar>
             </AppBar>
         );

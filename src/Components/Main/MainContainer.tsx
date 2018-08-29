@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Node, Connection, PanelModifyState } from "../../Models";
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress, Button } from '@material-ui/core';
 import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
+import { Add } from '@material-ui/icons';
 import NodeDrawer from '../NodeDrawer/NodeDrawer';
 import Dependencies from '../../Services/Dependencies';
 import NodeCard from "../NodeDrawer/NodeCard";
@@ -16,6 +17,11 @@ const styles = ({ spacing }: Theme) => createStyles({
     },
     progress: {
         margin: spacing.unit * 2,
+    },
+    menuButton: {
+        position: "fixed",
+        bottom: "30px",
+        right: "30px"
     },
 });
 
@@ -195,6 +201,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
         const { selectedNode, selectedConnection } = this.state;
         const { classes } = this.props;
 
+        const showReadyState = this.state.viewState === ViewState.Ready;
         const showViewState = this.state.viewState === ViewState.View;
         const showEditNodeState = this.state.viewState === ViewState.EditNode;
         const showEditConnectionState = this.state.viewState === ViewState.EditConnection;
@@ -248,6 +255,18 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
                         ></ConnectionPanel>
                         : null
                     }
+                    {showReadyState || showViewState
+                        ?
+                        <Button
+                            variant="fab"
+                            className={classes.menuButton}
+                            color="inherit"
+                            aria-label="Menu"
+                            onClick={this.onNodeAddClick}>
+                            <Add />
+                        </Button>
+                        : null
+                    }
                 </NodeDrawer>
             );
         } else {
@@ -260,7 +279,7 @@ class MainContainer extends React.Component<IMainContainerProps, IMainContainerS
 
         return (
             <div className={classes.root}>
-                <MainToolbar onAddClick={this.onNodeAddClick}></MainToolbar>
+                <MainToolbar></MainToolbar>
                 {this.renderNodeDrawer()}
             </div>
         );
