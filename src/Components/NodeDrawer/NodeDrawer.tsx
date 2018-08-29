@@ -18,12 +18,15 @@ const styles = ({ zIndex, palette, spacing, mixins }: Theme) => createStyles({
     },
     drawerPaper: {
         position: 'relative',
+        paddingTop: "64px",
+        marginBottom: "-64px",
         width: drawerWidth,
     },
     content: {
         flexGrow: 1,
         backgroundColor: palette.background.default,
         padding: spacing.unit * 3,
+        marginTop: "64px",
         minWidth: 0, // So the Typography noWrap works
     },
     toolbar: mixins.toolbar,

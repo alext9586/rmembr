@@ -10,6 +10,9 @@ const styles = ({ palette }: Theme) => createStyles({
         width: '100%',
         maxWidth: 360,
         backgroundColor: palette.background.paper,
+        position: "relative",
+        overflow: "auto",
+        maxHeight: "100%"
     },
 });
 

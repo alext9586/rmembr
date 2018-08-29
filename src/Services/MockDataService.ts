@@ -6,7 +6,7 @@ export class MockDataService implements IDbService {
     private nodes: Node[] = [];
 
     constructor() {
-        this.nodes = SampleNodes.create(4);
+        this.nodes = SampleNodes.create(12);
     }
 
     putNode(node: Node): Promise<string> {

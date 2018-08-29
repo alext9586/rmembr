@@ -6,10 +6,6 @@ const styles = ({ spacing }: Theme) => createStyles({
     flex: {
         flexGrow: 1,
     },
-    menuButton: {
-        marginLeft: -12,
-        marginRight: 20,
-    },
 });
 
 interface IMainToolbarProps extends WithStyles<typeof styles> {
@@ -24,7 +20,7 @@ class MainToolbar extends React.Component<IMainToolbarProps, {}> {
         const { classes } = this.props;
 
         return (
-            <AppBar position="static">
+            <AppBar position="fixed">
                 <Toolbar>
                     <Typography
                         align="left"
