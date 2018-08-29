@@ -24,8 +24,6 @@ interface INodeListProps extends WithStyles<typeof styles> {
 }
 
 class NodeList extends React.Component<INodeListProps, INodeListState> {
-    
-
     constructor(props: INodeListProps) {
         super(props);
     }

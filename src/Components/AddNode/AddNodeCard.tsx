@@ -22,7 +22,7 @@ export default class AddNodeCard extends React.Component<IAddNodeCardProps, IAdd
 
         this.state = {
             node: this.props.node || new Node(),
-            disableSave: true
+            disableSave: this.props.node ? this.props.node.title === "" : false
         };
 
         this.onTitleChange = this.onTitleChange.bind(this);
